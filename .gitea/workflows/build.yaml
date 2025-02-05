@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout Repository
         run: |
-          git clone --depth=1 http://gitea.home/kirom/sys-tracker.git .
+          git clone --depth=1 http://172.18.0.15:3000/kirom/sys-tracker.git .
 
       - name: Display Environment Variables
         run: cat .env
