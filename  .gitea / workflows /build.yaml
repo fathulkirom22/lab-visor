@@ -1,0 +1,16 @@
+name: Build
+run-name: ${{ gitea.actor }} is out Gitea Actions 🚀
+on: [push]
+
+jobs:
+  Explore-Gitea-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: pip freeze > requirements.txt
+        run: pip freeze > requirements.txt
+      - name: Docker Build
+        run: docker build -t sys-tracker-api .
+      - name: Docker Tag
+        run: docker tag sys-tracker-api:latest
+      - name: Docker push
+        run: docker push registery.home/sys-tracker-api:latest

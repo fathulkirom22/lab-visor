@@ -1,0 +1,16 @@
+
+{% extends "base.html" %}
+{% import "admin/chart.html" as cart %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+    <div class="container text-center">
+        <h1>Welcome to the Admin Dashboard</h1>
+        <div class="row align-items-start">
+            <div class="col">
+                {{ cart.resourceUsage() }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

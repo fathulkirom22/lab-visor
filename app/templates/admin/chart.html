@@ -1,0 +1,43 @@
+{% macro resourceUsage(resource) %}
+    <div class="w-100">
+        <canvas id="myChart" class="w-100"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        fetch('/sys/data-tracker?size=50')
+            .then(response => response.json())
+            .then(resource => {
+                let data = {
+                    labels: resource.data.map(item => item.created_at),
+                    datasets: [
+                        {
+                            label: "CPU Usage",
+                            data: resource.data.map(item => item.cpu),
+                            borderWidth: 1
+                        },
+                        {
+                            label: "Memory Usage",
+                            data: resource.data.map(item => item.memory),
+                            borderWidth: 1
+                        }
+                    ]
+                }
+                new Chart(ctx, {
+                    type: 'line',
+                    data,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+
+    </script>
+{% endmacro %}
