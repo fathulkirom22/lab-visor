@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        run: |
+          git clone --depth=1 http://gitea.home/kirom/sys-tracker.git .
 
       - name: Display Environment Variables
         run: cat .env
