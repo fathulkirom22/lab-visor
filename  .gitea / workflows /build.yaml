@@ -6,6 +6,8 @@ jobs:
   Explore-Gitea-Actions:
     runs-on: ubuntu-latest
     steps:
+      - name: cat .env
+        run: cat .env
       - name: pip freeze > requirements.txt
         run: pip freeze > requirements.txt
       - name: Docker Build
