@@ -13,8 +13,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: DBUS Setup
-        run: sudo apt-get update && sudo apt-get install -y libdbus-1-dev pkg-config meson
 
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -31,3 +29,13 @@ jobs:
 
       - name: Push Docker Image
         run: docker push registry.home/sys-tracker-api:latest
+      
+      - name: Deploy Docker Image
+        run: |
+          docker stop sys-tracker-api || true
+          docker rm sys-tracker-api || true
+          docker run --name sys-tracker-api\
+            --restart unless-stopped \
+            --network banana \
+            --dns 172.18.0.53 \
+            -d registry.home/sys-tracker-api:latest
