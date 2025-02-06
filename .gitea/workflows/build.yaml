@@ -13,6 +13,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: DBUS Setup
+        run: sudo apt-get update && sudo apt-get install -y libdbus-1-dev pkg-config meson
+
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -21,7 +24,7 @@ jobs:
           echo "Database URL: $DATABASE_URL"
 
       - name: Generate Requirements File
-        run: pip freeze > requirements.txt
+        run: pip freeze > requirements.txt && cat requirements.txt
 
       - name: Docker Login
         run: echo "${{ secrets.GITEA_TOKEN }}" | docker login registry.home --username ${{ gitea.actor }} --password-stdin
