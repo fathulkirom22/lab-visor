@@ -10,8 +10,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Update Git Remote URL
-        run: git remote set-url origin http://gitea.home/kirom/sys-tracker.git
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
