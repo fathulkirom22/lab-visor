@@ -7,6 +7,7 @@ on:
       - main 
 env:
   GITEA_INSTANCE_URL: http://gitea.home
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
   build-and-deploy:
@@ -15,8 +16,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Display Environment Variables
-        run: cat .env
+      - name: Use DATABASE_URL from Secret
+        run: |
+          echo "Database URL: $DATABASE_URL"
 
       - name: Generate Requirements File
         run: pip freeze > requirements.txt
