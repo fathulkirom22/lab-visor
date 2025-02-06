@@ -12,16 +12,8 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Add Gitea Host to /etc/hosts
-        run: echo "172.18.0.15 gitea" | sudo tee -a /etc/hosts
-        
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          repository: kirom/sys-tracker
-          token: ${{ secrets.GITEA_TOKEN }}
-          fetch-depth: 1
-          server_url: http://gitea.home
 
       - name: Display Environment Variables
         run: cat .env
