@@ -16,9 +16,6 @@ jobs:
           repository: kirom/sys-tracker
           token: ${{ secrets.GITEA_TOKEN }}
           fetch-depth: 1
-          submodules: false
-          ref: main
-          # Ganti URL langsung dengan domain reverse proxy
           server_url: http://gitea.home
 
       - name: Display Environment Variables
