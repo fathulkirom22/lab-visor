@@ -37,5 +37,6 @@ jobs:
           docker run --name sys-tracker-api\
             --restart unless-stopped \
             --network banana \
+            -e DATABASE_URL=$DATABASE_URL \
             --dns 172.18.0.53 \
             -d registry.home/sys-tracker-api:latest
