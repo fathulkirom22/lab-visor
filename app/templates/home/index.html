@@ -1,7 +1,7 @@
 
 {% extends "base.html" %}
-{% import "admin/chart.html" as cart %}
-{% import "admin/text.html" as text %}
+{% import "home/chart.html" as cart %}
+{% import "home/text.html" as text %}
 
 {% block title %}{{title}}{% endblock %}
 
@@ -18,8 +18,8 @@
                 <div id="systemInfo">
                     <h2>Informasi Sistem</h2>
                     {{text.base('Uptime', '/sys/uptime')}}
-                    {{text.base('Sistem Operasi', '/sys/info')}}
-                    {{text.base('Arsitektur', '/sys/architecture')}}
+                    {{text.base('Sistem Operasi', '/sys/info', 'OperatingSystem')}}
+                    {{text.base('Arsitektur', '/sys/info', 'Architecture')}}
                 </div>
             </div>
             <div class="col-md-6">

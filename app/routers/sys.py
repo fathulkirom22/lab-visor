@@ -7,7 +7,8 @@ from sqlalchemy import asc, desc
 from app.models import SysDataTracker
 from app.database import get_db
 from app.responses import ErrorResponse, SysDataTrackerResponse, BaseResponse
-import requests
+from app.database import test_connection
+import docker
 
 router = APIRouter(
     prefix="/sys",
@@ -15,6 +16,17 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+@router.get("/health-check", response_model=Union[BaseResponse, ErrorResponse])
+def get_root() -> BaseResponse | ErrorResponse:
+    try:
+        data = test_connection()
+        return BaseResponse(message=data)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=jsonable_encoder(ErrorResponse(message=str(e)))
+        )
+    
 @router.get("/data-tracker", response_model=Union[SysDataTrackerResponse, ErrorResponse])
 async def get_sys_data_tracker(
     db: Session = Depends(get_db),
@@ -60,9 +72,10 @@ def get_sys_uptime():
     
 @router.get("/info", response_model=Union[BaseResponse, ErrorResponse])
 def get_sys_uptime():
-    try:    
-        response = requests.get('http+unix://%2Fvar%2Frun%2Fdocker.sock/info')
-        data = response.json()
+    try:
+        client = docker.DockerClient(base_url='unix://var/run/docker.sock')
+        response = client.info()
+        data = response
         return BaseResponse(data=data)
     except Exception as e:
         raise HTTPException(

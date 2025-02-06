@@ -1,0 +1,22 @@
+{% macro base(label, api_url, path='text') %}
+    <p><strong>{{label}}:</strong> <span id="{{label}}">Memuat...</span></p>
+
+    <script>
+        fetch('{{api_url}}')
+            .then(response => response.json())
+            .then(resource => {
+                const keyString = 'data.{{ path }}';  // Mendapatkan string kunci dari path
+                const keys = keyString.split('.');  // Memisahkan string berdasarkan tanda titik
+
+                // Mengakses objek menggunakan array keys
+                let result = resource;
+                keys.forEach(key => {
+                    result = result[key];
+                });
+
+                const ctx = document.getElementById('{{ label }}');
+                ctx.textContent = result;
+            });
+
+    </script>
+{% endmacro %}
