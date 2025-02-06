@@ -23,9 +23,6 @@ jobs:
         run: |
           echo "Database URL: $DATABASE_URL"
 
-      - name: Generate Requirements File
-        run: pip freeze > requirements.txt && cat requirements.txt
-
       - name: Docker Login
         run: echo "${{ secrets.GITEA_TOKEN }}" | docker login registry.home --username ${{ gitea.actor }} --password-stdin
 
