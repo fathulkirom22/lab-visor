@@ -5,7 +5,9 @@ on:
   push:
     branches:
       - main 
-
+env:
+  GITEA_INSTANCE_URL: http://gitea.home
+  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
