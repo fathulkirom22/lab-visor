@@ -7,11 +7,14 @@ on:
       - main 
 env:
   GITEA_INSTANCE_URL: http://gitea.home
-  
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Add Gitea Host to /etc/hosts
+        run: echo "172.18.0.15 gitea" | sudo tee -a /etc/hosts
+        
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
