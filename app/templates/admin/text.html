@@ -1,0 +1,13 @@
+{% macro base(label, api_url) %}
+    <p><strong>{{label}}:</strong> <span id="{{label}}">Memuat...</span></p>
+
+    <script>
+        fetch('{{api_url}}')
+            .then(response => response.json())
+            .then(resource => {
+                const ctx = document.getElementById('{{ label }}');
+                ctx.textContent = resource.data.text;
+            });
+
+    </script>
+{% endmacro %}

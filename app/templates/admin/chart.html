@@ -1,18 +1,16 @@
-{% macro resourceUsage(resource) %}
+{% macro resourceUsage(id) %}
     <div class="w-100">
-        <canvas id="myChart" class="w-100"></canvas>
+        <canvas id="{{ id }}" class="w-100"></canvas>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
-        const ctx = document.getElementById('myChart');
-
-        fetch('/sys/data-tracker?size=50')
+        fetch('/sys/data-tracker?size=25')
             .then(response => response.json())
             .then(resource => {
+                const { DateTime } = luxon;
+
                 let data = {
-                    labels: resource.data.map(item => item.created_at),
+                    labels: resource.data.map(item => DateTime.fromISO(item.created_at).toFormat('h:mm a')),
                     datasets: [
                         {
                             label: "CPU Usage",
@@ -26,13 +24,17 @@
                         }
                     ]
                 }
+                const ctx = document.getElementById('{{ id }}');
+                ctx.height = 300;
+
                 new Chart(ctx, {
                     type: 'line',
                     data,
                     options: {
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                suggestedMax: 100
                             }
                         }
                     }

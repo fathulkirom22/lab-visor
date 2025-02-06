@@ -1,16 +1,74 @@
 
 {% extends "base.html" %}
 {% import "admin/chart.html" as cart %}
+{% import "admin/text.html" as text %}
 
 {% block title %}{{title}}{% endblock %}
 
 {% block content %}
-    <div class="container text-center">
-        <h1>Welcome to the Admin Dashboard</h1>
+    <div class="container">
         <div class="row align-items-start">
             <div class="col">
-                {{ cart.resourceUsage() }}
+                {{ cart.resourceUsage('resource') }}
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <div id="systemInfo">
+                    <h2>Informasi Sistem</h2>
+                    {{text.base('Uptime', '/sys/uptime')}}
+                    {{text.base('Sistem Operasi', '/sys/info')}}
+                    {{text.base('Arsitektur', '/sys/architecture')}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <canvas id="diskChart"></canvas>
             </div>
         </div>
     </div>
+
+    <script>
+        const diskData = {
+            labels: ['Terpakai', 'Kosong'],
+            datasets: [{
+                data: [70, 30],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Konfigurasi chart disk
+        const diskChart = new Chart(document.getElementById('diskChart'), {
+            type: 'pie',
+            data: diskData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        /***
+        // Fungsi untuk mendapatkan informasi sistem dari server (Anda perlu mengimplementasikannya)
+        function getSystemInfo() {
+            fetch('/api/systemInfo') // Ganti dengan endpoint API Anda
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('uptime').textContent = data.uptime;
+                    document.getElementById('os').textContent = data.os;
+                    document.getElementById('architecture').textContent = data.architecture;
+                });
+        }
+
+        // Panggil fungsi getSystemInfo saat halaman dimuat
+        window.onload = getSystemInfo;
+        ***/
+    </script>
 {% endblock %}

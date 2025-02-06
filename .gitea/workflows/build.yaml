@@ -34,9 +34,11 @@ jobs:
         run: |
           docker stop sys-tracker-api || true
           docker rm sys-tracker-api || true
-          docker run --name sys-tracker-api\
+          docker run --name sys-tracker-api \
             --restart unless-stopped \
             --network banana \
-            -e DATABASE_URL=$DATABASE_URL \
             --dns 172.18.0.53 \
+            -e DATABASE_URL=$DATABASE_URL \
+            -v /proc/uptime:/proc/uptime:ro \
+            -v /var/run/docker.sock:/var/run/docker.sock \
             -d registry.home/sys-tracker-api:latest
