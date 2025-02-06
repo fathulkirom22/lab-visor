@@ -12,15 +12,26 @@
 </head>
 <body class="min-vh-100">
     <nav class="px-3 navbar navbar-light bg-light">
-        <h3>Server Resource Monitor</h3>
+        <div class="container">
+            <a class="navbar-brand" href="/">Server Resource Monitor</a>
+        </div>
     </nav>
 
     <main class="mt-5">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="mt-5 text-center">
-        <p>&copy; 2025 My Website</p>
+    <footer class="mt-5">
+        <div class="container">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <p>Server Resource Monitor</p>
+                </div>
+                <div>
+                    <p>&copy; 2025</p>
+                </div>
+            </div>
+        </div>
     </footer>
 </body>
 </html>

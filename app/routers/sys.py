@@ -9,6 +9,9 @@ from app.database import get_db
 from app.responses import ErrorResponse, SysDataTrackerResponse, BaseResponse
 from app.database import test_connection
 import docker
+import psutil
+
+docker_client = docker.DockerClient(base_url='unix://var/run/docker.sock')
 
 router = APIRouter(
     prefix="/sys",
@@ -73,9 +76,24 @@ def get_sys_uptime():
 @router.get("/info", response_model=Union[BaseResponse, ErrorResponse])
 def get_sys_uptime():
     try:
-        client = docker.DockerClient(base_url='unix://var/run/docker.sock')
-        response = client.info()
-        data = response
+        data = docker_client.info()
+        return BaseResponse(data=data)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=jsonable_encoder(ErrorResponse(message=str(e)))
+        )
+    
+@router.get("/disk", response_model=Union[BaseResponse, ErrorResponse])
+def get_sys_disk():
+    try:
+        response = psutil.disk_usage('/')
+        data = {
+            "total": response.total,
+            "used": response.used,
+            "free": response.free,
+            "percent_used": response.percent
+        }
         return BaseResponse(data=data)
     except Exception as e:
         raise HTTPException(

@@ -10,7 +10,7 @@
                 const { DateTime } = luxon;
 
                 let data = {
-                    labels: resource.data.map(item => DateTime.fromISO(item.created_at).toFormat('h:mm a')),
+                    labels: resource.data.map(item => DateTime.fromISO(item.created_at).toFormat('HH:mm')),
                     datasets: [
                         {
                             label: "CPU Usage",
@@ -37,6 +37,49 @@
                                 suggestedMax: 100
                             }
                         }
+                    }
+                });
+            });
+
+    </script>
+{% endmacro %}
+
+{% macro disk(id) %}
+    <div class="w-100">
+        <canvas id="{{ id }}" class="w-100"></canvas>
+    </div>
+
+    <script>
+        fetch('/sys/disk')
+            .then(response => response.json())
+            .then(resource => {
+                const free = resource.data.free;
+                const used = resource.data.used;
+                const data = {
+                    labels: ['Terpakai', 'Kosong'],
+                    datasets: [{
+                        data: [used, free],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                };
+        
+                const ctx = document.getElementById('{{ id }}');
+                ctx.height = 250;
+
+                new Chart(ctx, {
+                    type: 'pie',
+                    data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
                     }
                 });
             });
