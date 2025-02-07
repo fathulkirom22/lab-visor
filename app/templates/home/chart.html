@@ -86,3 +86,134 @@
 
     </script>
 {% endmacro %}
+
+{% macro realtimeCPU(id) %}
+    <div class="w-100">
+        <canvas id="{{ id }}" class="w-100" style="height: 300px;" height="300"></canvas>
+    </div>
+
+    <script>
+        let db_cpu = [...new Array(30).fill({cpu_percent: null, datetime: "2025-02-07T16:12:28.166644"})]
+        let chart_cpu;
+        const ctx_cpu = document.getElementById('{{ id }}');
+        ctx_cpu.height = 200;
+        function updateData() {
+            fetch('/api/sys/cpu-usage')
+                .then(response => response.json())
+                .then(resource => {
+                    const { DateTime } = luxon;
+                    db_cpu.push(resource.data);
+                    if (db_cpu.length > 30) {
+                        db_cpu.shift();
+                    }
+                    let data = {
+                        labels: db_cpu.map(item => DateTime.fromISO(item.datetime).toFormat('HH:mm')),
+                        datasets: [
+                            {
+                                label: "CPU Usage",
+                                data: db_cpu.map(item => item.cpu_percent),
+                                borderWidth: 1
+                            },
+                        ]
+                    }
+                    
+    
+                    if (chart_cpu) {
+                        chart_cpu.destroy();
+                    }
+
+                    chart_cpu = new Chart(ctx_cpu, {
+                        type: 'line',
+                        data,
+                        options: {
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    display: false, // Sembunyikan seluruh sumbu (termasuk label dan tick)
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    suggestedMax: 100,
+                                }
+                            },
+                            animation: {
+                                duration: 0, // Set duration ke 0 untuk animasi instan
+                                easing: 'linear' // Gunakan easing linear untuk pergerakan konstan
+                            },
+                        }
+                    });
+                });
+        }
+
+        setInterval(updateData, 3000);
+
+        window.onload = updateData;
+
+    </script>
+{% endmacro %}
+
+{% macro realtimeMemory(id) %}
+    <div class="w-100">
+        <canvas id="{{ id }}" class="w-100" style="height: 300px;" height="300"></canvas>
+    </div>
+
+    <script>
+        let db = [...new Array(30).fill({cpu_percent: null, datetime: "2025-02-07T16:12:28.166644"})]
+        let chart;
+        const ctx = document.getElementById('{{ id }}');
+        ctx.height = 200;
+        function updateData() {
+            fetch('/api/sys/memory-usage')
+                .then(response => response.json())
+                .then(resource => {
+                    const { DateTime } = luxon;
+                    db.push(resource.data);
+                    if (db.length > 30) {
+                        db.shift();
+                    }
+                    let data = {
+                        labels: db.map(item => DateTime.fromISO(item.datetime).toFormat('HH:mm')),
+                        datasets: [
+                            {
+                                label: "Memory Usage",
+                                data: db.map(item => item.percent_used),
+                                borderWidth: 1,
+                                borderColor: 'rgba(255, 99, 132, 1)'
+                            },
+                        ]
+                    }
+                    
+    
+                    if (chart) {
+                        chart.destroy();
+                    }
+
+                    chart = new Chart(ctx, {
+                        type: 'line',
+                        data,
+                        options: {
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    display: false, // Sembunyikan seluruh sumbu (termasuk label dan tick)
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    suggestedMax: 100,
+                                }
+                            },
+                            animation: {
+                                duration: 0, // Set duration ke 0 untuk animasi instan
+                                easing: 'linear' // Gunakan easing linear untuk pergerakan konstan
+                            },
+                        }
+                    });
+                });
+        }
+
+        setInterval(updateData, 3000);
+
+        window.onload = updateData;
+
+    </script>
+{% endmacro %}

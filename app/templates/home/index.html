@@ -9,7 +9,7 @@
     <div class="container">
 
         <div class="row mb-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div id="systemInfo">
                     <h2>System Info</h2>
                     {{text.base('Uptime', '/api/sys/uptime')}}
@@ -19,7 +19,7 @@
                     {{text.base('RAM', '/api/sys/info', 'MemTotal')}}
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div id="diskInfo">
                     <h2>Disk Info</h2>
                     {{ cart.disk('disk') }}
@@ -27,9 +27,20 @@
             </div>
         </div>
 
+        <div class="row align-items-start mb-5">
+            <div class="col">
+                <h2>CPU</h2>
+                {{ cart.realtimeCPU('realtimeCPU') }}
+            </div>
+            <div class="col">
+                <h2>Memory</h2>
+                {{ cart.realtimeMemory('realtimeMemory') }}
+            </div>
+        </div>
+
         <div class="row align-items-start">
             <div class="col">
-                <h2>Resource Info</h2>
+                <h2>Resource Tracker</h2>
                 {{ cart.resourceUsage('resource') }}
             </div>
         </div>

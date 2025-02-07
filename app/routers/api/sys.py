@@ -10,6 +10,7 @@ from app.responses import ErrorResponse, SysDataTrackerResponse, BaseResponse
 from app.database import test_connection
 import docker
 import psutil
+from datetime import datetime
 
 docker_client = docker.DockerClient(base_url='unix://var/run/docker.sock')
 
@@ -20,7 +21,7 @@ router = APIRouter(
 )
 
 @router.get("/health-check", response_model=Union[BaseResponse, ErrorResponse])
-def get_root() -> BaseResponse | ErrorResponse:
+def get_sys_health_check() -> BaseResponse | ErrorResponse:
     try:
         data = test_connection()
         return BaseResponse(message=data)
@@ -96,6 +97,39 @@ def get_sys_disk():
             "used": response.used,
             "free": response.free,
             "percent_used": response.percent
+        }
+        return BaseResponse(data=data)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=jsonable_encoder(ErrorResponse(message=str(e)))
+        )
+
+@router.get("/cpu-usage", response_model=Union[BaseResponse, ErrorResponse])
+def get_sys_cpu_usage():
+    try:
+        cpu_percent = psutil.cpu_percent(interval=1)  # Perbarui setiap detik
+        data = {
+            "cpu_percent": cpu_percent,
+            "datetime": datetime.now().isoformat()
+        }
+        return BaseResponse(data=data)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=jsonable_encoder(ErrorResponse(message=str(e)))
+        )
+    
+@router.get("/memory-usage", response_model=Union[BaseResponse, ErrorResponse])
+def get_sys_memory_usage():
+    try:
+        response = psutil.virtual_memory()
+        data = {
+            "total": response.total,
+            "available": response.available,
+            "used": response.used,
+            "percent_used": response.percent,
+            "datetime": datetime.now().isoformat()
         }
         return BaseResponse(data=data)
     except Exception as e:
