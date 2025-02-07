@@ -35,6 +35,7 @@ async def get_sys_data_tracker(
     db: Session = Depends(get_db),
     sort_by: Annotated[Literal["id", "cpu", "memory", "quota", "created_at", "quota_response", "ERROR"], Query()] = "created_at",
     order: Annotated[Literal["asc", "desc"], Query()] = "desc",
+    direction: Annotated[Literal["asc", "desc"], Query()] = "desc",
     page: Annotated[int, Query(ge=1)] = 1,
     size: Annotated[int, Query(ge=1, le=100)] = 10
 ) -> SysDataTrackerResponse | ErrorResponse:
@@ -47,6 +48,8 @@ async def get_sys_data_tracker(
         total = db.query(SysDataTracker).count()
         total_pages = (total + size - 1) // size
         data = db.query(SysDataTracker).order_by(sort_order).offset((page - 1) * size).limit(size).all()
+        if direction == "desc":
+            data = data[::-1]
         return SysDataTrackerResponse(
             page=page,
             size=size,
