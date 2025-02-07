@@ -1,22 +1,30 @@
-{% macro base(label, api_url, path='text') %}
+{% macro base(label, api_url, path ='text', interval = 0) %}
     <p><strong>{{label}}:</strong> <span id="{{label}}">Memuat...</span></p>
 
     <script>
-        fetch('{{api_url}}')
-            .then(response => response.json())
-            .then(resource => {
-                const keyString = 'data.{{ path }}';  // Mendapatkan string kunci dari path
-                const keys = keyString.split('.');  // Memisahkan string berdasarkan tanda titik
+        function updateData() {
+            fetch('{{api_url}}')
+                .then(response => response.json())
+                .then(resource => {
+                    const keyString = 'data.{{ path }}';  // Mendapatkan string kunci dari path
+                    const keys = keyString.split('.');  // Memisahkan string berdasarkan tanda titik
 
-                // Mengakses objek menggunakan array keys
-                let result = resource;
-                keys.forEach(key => {
-                    result = result[key];
+                    // Mengakses objek menggunakan array keys
+                    let result = resource;
+                    keys.forEach(key => {
+                        result = result[key];
+                    });
+
+                    const ctx = document.getElementById('{{ label }}');
+                    ctx.textContent = result;
                 });
+        }
 
-                const ctx = document.getElementById('{{ label }}');
-                ctx.textContent = result;
-            });
+        {% if interval %}
+            setInterval(updateData, {{ interval }} * 1000);
+        {% endif %}
+        
+        updateData();
 
     </script>
 {% endmacro %}

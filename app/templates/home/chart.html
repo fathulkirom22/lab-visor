@@ -1,6 +1,6 @@
 {% macro resourceUsage(id) %}
     <div class="w-100">
-        <canvas id="{{ id }}" class="w-100"></canvas>
+        <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
     </div>
 
     <script>
@@ -25,12 +25,13 @@
                     ]
                 }
                 const ctx = document.getElementById('{{ id }}');
-                ctx.height = 300;
+                ctx.height = 200;
 
                 new Chart(ctx, {
                     type: 'line',
                     data,
                     options: {
+                        maintainAspectRatio: false,
                         scales: {
                             y: {
                                 beginAtZero: true,
@@ -46,7 +47,7 @@
 
 {% macro disk(id) %}
     <div class="w-100">
-        <canvas id="{{ id }}" class="w-100"></canvas>
+        <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
     </div>
 
     <script>
@@ -78,6 +79,7 @@
                     type: 'pie',
                     data,
                     options: {
+                        maintainAspectRatio: false,
                         responsive: true,
                         maintainAspectRatio: false
                     }
@@ -89,14 +91,12 @@
 
 {% macro realtimeCPU(id) %}
     <div class="w-100">
-        <canvas id="{{ id }}" class="w-100" style="height: 300px;" height="300"></canvas>
+        <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
     </div>
 
     <script>
         let db_cpu = [...new Array(30).fill({cpu_percent: null, datetime: "2025-02-07T16:12:28.166644"})]
         let chart_cpu;
-        const ctx_cpu = document.getElementById('{{ id }}');
-        ctx_cpu.height = 200;
         function updateData() {
             fetch('/api/sys/cpu-usage')
                 .then(response => response.json())
@@ -122,7 +122,10 @@
                         chart_cpu.destroy();
                     }
 
-                    chart_cpu = new Chart(ctx_cpu, {
+                    const ctx = document.getElementById('{{ id }}');
+                    ctx.height = 200;
+
+                    chart_cpu = new Chart(ctx, {
                         type: 'line',
                         data,
                         options: {
@@ -154,41 +157,43 @@
 
 {% macro realtimeMemory(id) %}
     <div class="w-100">
-        <canvas id="{{ id }}" class="w-100" style="height: 300px;" height="300"></canvas>
+        <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
     </div>
 
     <script>
-        let db = [...new Array(30).fill({cpu_percent: null, datetime: "2025-02-07T16:12:28.166644"})]
-        let chart;
-        const ctx = document.getElementById('{{ id }}');
-        ctx.height = 200;
+        let db_memory = [...new Array(30).fill({cpu_percent: null, datetime: "2025-02-07T16:12:28.166644"})]
+        let chart_memory;
         function updateData() {
             fetch('/api/sys/memory-usage')
                 .then(response => response.json())
                 .then(resource => {
                     const { DateTime } = luxon;
-                    db.push(resource.data);
-                    if (db.length > 30) {
-                        db.shift();
+                    db_memory.push(resource.data);
+                    if (db_memory.length > 30) {
+                        db_memory.shift();
                     }
                     let data = {
-                        labels: db.map(item => DateTime.fromISO(item.datetime).toFormat('HH:mm')),
+                        labels: db_memory.map(item => DateTime.fromISO(item.datetime).toFormat('HH:mm')),
                         datasets: [
                             {
                                 label: "Memory Usage",
-                                data: db.map(item => item.percent_used),
+                                data: db_memory.map(item => item.percent_used),
                                 borderWidth: 1,
-                                borderColor: 'rgba(255, 99, 132, 1)'
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)'
                             },
                         ]
                     }
                     
     
-                    if (chart) {
-                        chart.destroy();
+                    if (chart_memory) {
+                        chart_memory.destroy();
                     }
 
-                    chart = new Chart(ctx, {
+                    const ctx = document.getElementById('{{ id }}');
+                    ctx.height = 200;
+
+                    chart_memory = new Chart(ctx, {
                         type: 'line',
                         data,
                         options: {
