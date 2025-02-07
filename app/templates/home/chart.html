@@ -4,7 +4,7 @@
     </div>
 
     <script>
-        fetch('/sys/data-tracker?size=25')
+        fetch('/api/sys/data-tracker?size=25')
             .then(response => response.json())
             .then(resource => {
                 const { DateTime } = luxon;
@@ -50,7 +50,7 @@
     </div>
 
     <script>
-        fetch('/sys/disk')
+        fetch('/api/sys/disk')
             .then(response => response.json())
             .then(resource => {
                 const free = resource.data.free;

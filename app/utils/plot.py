@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import io
 import base64
-from app.routers.sys import get_sys_data_tracker
+from app.routers.api.sys import get_sys_data_tracker
 
 async def generate_plot(db):
     res = await get_sys_data_tracker(db, sort_by="created_at", order="desc", page=1, size=10)

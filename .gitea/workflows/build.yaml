@@ -39,6 +39,6 @@ jobs:
             --network banana \
             --dns 172.18.0.53 \
             -e DATABASE_URL=$DATABASE_URL \
-            -v /proc/uptime:/proc/uptime:ro \
+            -v /proc:/proc:ro \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -d registry.home/sys-tracker-api:latest

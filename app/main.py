@@ -1,12 +1,9 @@
-from typing import Union
-
-from fastapi import FastAPI, HTTPException
-from fastapi.encoders import jsonable_encoder
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
-from app.responses import BaseResponse, ErrorResponse
-from app.routers import home, sys
+from app.routers import home
+from app.routers.api import api_router
 
 app = FastAPI()
 
@@ -26,6 +23,6 @@ templates = Jinja2Templates(directory="app/templates")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-app.include_router(sys.router)
+app.include_router(api_router)
 app.include_router(home.router)
 

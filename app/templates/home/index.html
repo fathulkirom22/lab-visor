@@ -11,21 +11,25 @@
         <div class="row mb-5">
             <div class="col-md-6">
                 <div id="systemInfo">
-                    <h2>Informasi Sistem</h2>
-                    {{text.base('Uptime', '/sys/uptime')}}
-                    {{text.base('Sistem Operasi', '/sys/info', 'OperatingSystem')}}
-                    {{text.base('Arsitektur', '/sys/info', 'Architecture')}}
-                    {{text.base('Core CPU', '/sys/info', 'NCPU')}}
-                    {{text.base('RAM', '/sys/info', 'MemTotal')}}
+                    <h2>System Info</h2>
+                    {{text.base('Uptime', '/api/sys/uptime')}}
+                    {{text.base('Sistem Operasi', '/api/sys/info', 'OperatingSystem')}}
+                    {{text.base('Arsitektur', '/api/sys/info', 'Architecture')}}
+                    {{text.base('Core CPU', '/api/sys/info', 'NCPU')}}
+                    {{text.base('RAM', '/api/sys/info', 'MemTotal')}}
                 </div>
             </div>
             <div class="col-md-6">
-                {{ cart.disk('disk') }}
+                <div id="diskInfo">
+                    <h2>Disk Info</h2>
+                    {{ cart.disk('disk') }}
+                </div>
             </div>
         </div>
 
         <div class="row align-items-start">
             <div class="col">
+                <h2>Resource Info</h2>
                 {{ cart.resourceUsage('resource') }}
             </div>
         </div>
