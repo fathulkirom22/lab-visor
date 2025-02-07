@@ -2,10 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
-from app.routers import home
-from app.routers.api import api_router
+from .routers import home
+from .routers.api import api_router
+from .startup import lifespan
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 origins = [
     "*"

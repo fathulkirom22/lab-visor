@@ -57,7 +57,7 @@
                 const free = resource.data.free;
                 const used = resource.data.used;
                 const data = {
-                    labels: ['Terpakai', 'Kosong'],
+                    labels: ['Usage', 'Free'],
                     datasets: [{
                         data: [used, free],
                         backgroundColor: [
@@ -112,7 +112,9 @@
                             {
                                 label: "CPU Usage",
                                 data: db_cpu.map(item => item.cpu_percent),
-                                borderWidth: 1
+                                borderWidth: 1,
+                                fill: true,
+                                tension: 0.4
                             },
                         ]
                     }
@@ -150,7 +152,7 @@
 
         setInterval(updateData, 3000);
 
-        window.onload = updateData;
+        updateData()
 
     </script>
 {% endmacro %}
@@ -180,7 +182,9 @@
                                 data: db_memory.map(item => item.percent_used),
                                 borderWidth: 1,
                                 borderColor: 'rgba(255, 99, 132, 1)',
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)'
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                fill: true,
+                                tension: 0.4
                             },
                         ]
                     }
@@ -218,7 +222,7 @@
 
         setInterval(updateData, 3000);
 
-        window.onload = updateData;
+        updateData();
 
     </script>
 {% endmacro %}

@@ -3,11 +3,12 @@ from typing import Union, Literal, Annotated
 from fastapi import Depends, HTTPException, Query, APIRouter
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
+from sqlmodel import select, func
 from sqlalchemy import asc, desc
 from app.models import SysDataTracker
-from app.database import get_db
+from app.database import SessionDep
 from app.responses import ErrorResponse, SysDataTrackerResponse, BaseResponse
-from app.database import test_connection
+# from app.database import test_connection
 import docker
 import psutil
 from datetime import datetime
@@ -20,20 +21,20 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/health-check", response_model=Union[BaseResponse, ErrorResponse])
-def get_sys_health_check() -> BaseResponse | ErrorResponse:
-    try:
-        data = test_connection()
-        return BaseResponse(message=data)
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=jsonable_encoder(ErrorResponse(message=str(e)))
-        )
+# @router.get("/health-check", response_model=Union[BaseResponse, ErrorResponse])
+# def get_sys_health_check() -> BaseResponse | ErrorResponse:
+#     try:
+#         data = test_connection()
+#         return BaseResponse(message=data)
+#     except Exception as e:
+#         raise HTTPException(
+#             status_code=500,
+#             detail=jsonable_encoder(ErrorResponse(message=str(e)))
+#         )
     
 @router.get("/data-tracker", response_model=Union[SysDataTrackerResponse, ErrorResponse])
 async def get_sys_data_tracker(
-    db: Session = Depends(get_db),
+    db: SessionDep,
     sort_by: Annotated[Literal["id", "cpu", "memory", "quota", "created_at", "quota_response", "ERROR"], Query()] = "created_at",
     order: Annotated[Literal["asc", "desc"], Query()] = "desc",
     direction: Annotated[Literal["asc", "desc"], Query()] = "desc",
@@ -46,9 +47,9 @@ async def get_sys_data_tracker(
             raise Exception("Invalid sorting column")
         
         sort_order = asc(column) if order.lower() == "asc" else desc(column)
-        total = db.query(SysDataTracker).count()
+        total = db.exec(select(func.count()).select_from(SysDataTracker)).one()
         total_pages = (total + size - 1) // size
-        data = db.query(SysDataTracker).order_by(sort_order).offset((page - 1) * size).limit(size).all()
+        data = db.exec(select(SysDataTracker).order_by(sort_order).offset((page - 1) * size).limit(size)).all()
         if direction == "desc":
             data = data[::-1]
         return SysDataTrackerResponse(

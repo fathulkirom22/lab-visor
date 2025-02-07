@@ -2,6 +2,7 @@ from typing import Union, Any, Optional
 
 from pydantic import BaseModel
 from datetime import datetime
+from .models import SysDataTracker
 
 class ItemSysDataTracker(BaseModel):
     id: int
@@ -28,4 +29,4 @@ class PaginatedResponse(BaseResponse):
     data: list[dict]
 
 class SysDataTrackerResponse(PaginatedResponse):
-    data: list[ItemSysDataTracker]
+    data: list[SysDataTracker]

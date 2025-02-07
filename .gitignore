@@ -2,3 +2,5 @@ env/
 app/.env
 __pycache__/
 **/__pycache__/
+app/data
+alembic.ini
