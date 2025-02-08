@@ -9,9 +9,12 @@
     <div class="container">
 
         <div class="row mb-5">
-            <div class="col-md-8">
+            <div class="col-md-6 mb-5 mb-md-0">
                 <div id="systemInfo">
-                    <h2>System Info</h2>
+                    <h3>
+                        <i class="bi bi-info-circle"></i>
+                        System Info
+                    </h3>
                     {{text.base('Uptime', '/api/sys/uptime', 'text', 15)}}
                     {{text.base('Operating System', '/api/sys/info', 'OperatingSystem')}}
                     {{text.base('Architecture', '/api/sys/info', 'Architecture')}}
@@ -21,26 +24,29 @@
             </div>
             <div class="col-md-4">
                 <div id="diskInfo">
-                    <h2>Disk Info</h2>
+                    <h3>
+                        <i class="bi bi-hdd"></i>
+                        Disk
+                    </h3>
                     {{ cart.disk('disk') }}
                 </div>
             </div>
         </div>
 
         <div class="row align-items-start mb-5">
-            <div class="col-md-6">
-                <h2>CPU</h2>
+            <div class="col-md-6 mb-5 mb-md-0">
+                <h3><i class="bi bi-cpu"></i> CPU</h3>
                 {{ cart.realtimeCPU('realtimeCPU') }}
             </div>
             <div class="col-md-6">
-                <h2>Memory</h2>
+                <h3><i class="bi bi-memory"></i> Memory</h3>
                 {{ cart.realtimeMemory('realtimeMemory') }}
             </div>
         </div>
 
         <div class="row align-items-start">
             <div class="col">
-                <h2>Resource Tracker</h2>
+                <h3><i class="bi bi-bar-chart-steps"></i> Resource Tracker</h3>
                 {{ cart.resourceUsage('resource') }}
             </div>
         </div>

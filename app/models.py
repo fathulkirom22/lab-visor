@@ -10,7 +10,7 @@ class SysDataTracker(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     cpu: float
     memory: float
-    created_at: datetime = Field(default=datetime.now())
+    created_at: datetime = Field(default_factory=lambda: datetime.now())
 
 # Ambil model yang sudah ada
 # SysDataTracker = Base.classes.sys_data_tracker  # Pastikan nama tabel sesuai dengan database

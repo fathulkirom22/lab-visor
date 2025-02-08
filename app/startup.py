@@ -9,10 +9,10 @@ import psutil
 
 interval = 900
 
-def printit():
+def track_resource_usage():
     with Session(engine) as session:
         # Simpan data ke database
-        cpu_percent = psutil.cpu_percent(interval=interval) 
+        cpu_percent = psutil.cpu_percent(interval=1) 
         memory_percent = psutil.virtual_memory().percent
         data = SysDataTracker(cpu=cpu_percent, memory=memory_percent)
         session.add(data)
@@ -34,7 +34,7 @@ def printit():
 async def lifespan(app:FastAPI):
     create_db_and_tables()
     scheduler = BackgroundScheduler()
-    scheduler.add_job(printit,"interval",seconds=interval)
+    scheduler.add_job(track_resource_usage,"interval", seconds=interval, misfire_grace_time=5, coalesce=True)
     scheduler.start()
     yield
     scheduler.shutdown()
