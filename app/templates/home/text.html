@@ -1,7 +1,7 @@
 {% macro base(label, api_url, path ='text', interval = 0) %}
     <p><strong>{{label}}:</strong> <span id="{{label}}">Memuat...</span></p>
 
-    <script>
+    <script type="module">
         function updateData() {
             fetch('{{api_url}}')
                 .then(response => response.json())

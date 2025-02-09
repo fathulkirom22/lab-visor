@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
+from starlette.responses import JSONResponse
+from .responses import ErrorResponse
 from .routers import home
 from .routers.api import api_router
 from .startup import lifespan
@@ -20,10 +22,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-templates = Jinja2Templates(directory="app/templates")
+@app.middleware("http")
+async def error_handling_middleware(request: Request, call_next):
+    try:
+        response = await call_next(request)
+        return response
+    except Exception as e:
+        print(f"Terjadi kesalahan: {e}")  # Catat kesalahan
+        return JSONResponse(status_code=500, content=jsonable_encoder(ErrorResponse(message=str(e))))
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(api_router)
 app.include_router(home.router)
-

@@ -38,6 +38,8 @@ jobs:
             --restart unless-stopped \
             --network banana \
             --dns 172.18.0.53 \
+            -e TZ=Asia/Jakarta \
             -v /proc/uptime:/proc/uptime:ro \
             -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $HOME/lab-visor/data:/code/app/data \
             -d registry.home/sys-tracker-api:latest

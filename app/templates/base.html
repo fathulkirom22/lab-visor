@@ -10,6 +10,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.3.0/luxon.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <script>
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const { DateTime, Settings } = luxon;
+        Settings.defaultZoneName = tz;
+    </script>
 </head>
 <body class="min-vh-100">
     <nav class="navbar navbar-light bg-light">

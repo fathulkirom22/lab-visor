@@ -3,14 +3,13 @@
         <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
     </div>
 
-    <script>
+    <script type="module">
         fetch('/api/sys/data-tracker?size=25')
             .then(response => response.json())
             .then(resource => {
-                const { DateTime } = luxon;
 
                 let data = {
-                    labels: resource.data.map(item => DateTime.fromISO(item.created_at).toFormat('HH:mm')),
+                    labels: resource.data.map(item => DateTime.fromISO(item.created_at).setZone(tz).toFormat('HH:mm')),
                     datasets: [
                         {
                             label: "CPU Usage",
@@ -50,7 +49,7 @@
         <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
     </div>
 
-    <script>
+    <script type="module">
         fetch('/api/sys/disk')
             .then(response => response.json())
             .then(resource => {
@@ -94,14 +93,13 @@
         <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
     </div>
 
-    <script>
+    <script type="module">
         let db_cpu = [...new Array(30).fill({cpu_percent: null, datetime: "2025-02-07T16:12:28.166644"})]
         let chart_cpu;
         function updateData() {
             fetch('/api/sys/cpu-usage')
                 .then(response => response.json())
                 .then(resource => {
-                    const { DateTime } = luxon;
                     db_cpu.push(resource.data);
                     if (db_cpu.length > 30) {
                         db_cpu.shift();
@@ -162,14 +160,13 @@
         <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
     </div>
 
-    <script>
+    <script type="module">
         let db_memory = [...new Array(30).fill({cpu_percent: null, datetime: "2025-02-07T16:12:28.166644"})]
         let chart_memory;
         function updateData() {
             fetch('/api/sys/memory-usage')
                 .then(response => response.json())
                 .then(resource => {
-                    const { DateTime } = luxon;
                     db_memory.push(resource.data);
                     if (db_memory.length > 30) {
                         db_memory.shift();

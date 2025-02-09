@@ -4,14 +4,6 @@ from pydantic import BaseModel
 from datetime import datetime
 from .models import SysDataTracker
 
-class ItemSysDataTracker(BaseModel):
-    id: int
-    cpu: float
-    memory: float
-    quota: Union[float, None] = None
-    created_at: datetime
-    quota_response: Any
-
 class BaseResponse(BaseModel):
     status: str = "success"
     message: str = "OK"
