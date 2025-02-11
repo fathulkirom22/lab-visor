@@ -20,13 +20,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.middleware("http")
-async def error_handling_middleware(request: Request, call_next):
-    try:
-        response = await call_next(request)
-        return response
-    except Exception as e:
-        return HTMLResponse(status_code=500, content=f"Error: {str(e)}")
+# @app.middleware("http")
+# async def error_handling_middleware(request: Request, call_next):
+#     try:
+#         response = await call_next(request)
+#         return response
+#     except Exception as e:
+#         return HTMLResponse(status_code=500, content=f"Error: {str(e)}")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 

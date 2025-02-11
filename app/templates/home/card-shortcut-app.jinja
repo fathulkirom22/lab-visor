@@ -1,0 +1,55 @@
+{% import "home/modal.jinja" as modal %}
+
+<div class="col-sm-3 p-2">
+    <div class="card bg-info h-100">
+        <div class="card-body h-100">
+            <div class="d-flex column flex-column justify-content-between h-100">
+                <div class="d-flex justify-content-between">
+                    <div class="mb-4">
+                        <h5 class="card-title">{{item.name}}</h5>
+                        <p class="card-text text-white">{{item.description}}</p>
+                    </div>
+                    <div>
+                        {{ modal.form_shortcut_app(true, item) }}
+                        <button
+                            id="deleteShortcutApp"
+                            type="button" 
+                            class="btn p-0 m-0"
+                            hx-delete="/shortcut-app/{{item.id}}"
+                            confirm-with-sweet-alert='true'
+                            hx-target="#_alert"
+                            hx-on::after-request="htmx.trigger('#homeListShortcutApp', 'refresh');"
+                        >
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <a href="{{item.link}}" class="btn btn-outline-dark">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+document.body.addEventListener('htmx:configRequest', function (evt) {
+    if (evt.target.matches("[confirm-with-sweet-alert='true']")) {
+        evt.preventDefault();
+        new Swal({
+            title: "Are you sure?",
+            text: "Are you sure you are sure?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((confirmed) => {
+           if (confirmed.isConfirmed) {
+                // Jalankan request HTMX secara manual setelah konfirmasi
+                htmx.ajax('DELETE', '/shortcut-app/{{item.id}}', {target: '#_alert'}).then(res=>{
+                    htmx.trigger('#homeListShortcutApp', 'refresh');
+                });
+            }
+        });
+    }
+});
+</script>

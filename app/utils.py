@@ -1,4 +1,5 @@
 import os
+import re
 import htmlmin
 from fastapi.responses import HTMLResponse
 
@@ -31,3 +32,7 @@ async def minify_html(request):
         except Exception as e:
             print(f"Error minifying HTML: {e}") # Handle potential errors (important!)
         return response
+    
+def camel_to_snake(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()

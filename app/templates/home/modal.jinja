@@ -1,0 +1,64 @@
+{% macro form_shortcut_app(edit = false, item = None) %}
+    <button type="button" class="btn p-0 m-0" data-bs-toggle="modal" data-bs-target="#formShortcutApp-{{item.id}}" data-bs-whatever="@getbootstrap">
+        {% if edit %}
+            <i class="bi bi-pencil-square"></i>
+        {% else %}
+            <i class="bi bi-plus"></i>
+        {% endif %}
+    </button>
+
+    <div class="modal fade" id="formShortcutApp-{{item.id}}" tabindex="-1" aria-labelledby="formShortcutAppLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="formShortcutAppLabel">App</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form
+                        id="form-shortcut-app"
+                        hx-post="/shortcut-app/save"
+                        hx-target="#_alert" 
+                        hx-swap="afterbegin"
+                        hx-on::after-request="
+                            if(event.detail.successful){
+                                if(!{{edit | tojson}}) {
+                                    this.reset();
+                                }
+                                let modalEL = document.getElementById('formShortcutApp-{{item.id}}');
+                                let modal = bootstrap.Modal.getInstance(modalEL);
+                                modal.hide();
+                                htmx.trigger('#homeListShortcutApp', 'refresh'); 
+                            }
+                        "
+                    >
+                        {% if edit %}
+                            <input type="text" hidden id="id-app" name="id" value="{{item.id}}">
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="name-app" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name-app" name="name" value="{{item.name}}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="link-app" class="col-form-label">Link:</label>
+                            <input type="text" class="form-control" id="link-app" name="link" value="{{item.link}}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="icon-app" class="col-form-label">Icon:</label>
+                            <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description-text" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description-text" name="description" value="{{item.description}}"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

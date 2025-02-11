@@ -25,21 +25,21 @@ jobs:
         run: echo "${{ secrets.GITEA_TOKEN }}" | docker login registry.home --username ${{ gitea.actor }} --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t registry.home/sys-tracker-api:latest .
+        run: docker build -t registry.home/lab-visor:latest .
 
       - name: Push Docker Image
-        run: docker push registry.home/sys-tracker-api:latest
+        run: docker push registry.home/lab-visor:latest
       
       - name: Deploy Docker Image
         run: |
-          docker stop sys-tracker-api || true
-          docker rm sys-tracker-api || true
-          docker run --name sys-tracker-api \
+          docker stop lab-visor || true
+          docker rm lab-visor || true
+          docker run --name lab-visor \
             --restart unless-stopped \
             --network banana \
             --dns 172.18.0.53 \
             -e TZ=Asia/Jakarta \
             -v /proc/uptime:/proc/uptime:ro \
             -v /var/run/docker.sock:/var/run/docker.sock \
-            -v $HOME/lab-visor/data:/code/app/data \
-            -d registry.home/sys-tracker-api:latest
+            -v /home/kirom/lab-visor/data:/code/app/data \
+            -d registry.home/lab-visor:latest

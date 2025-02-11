@@ -2,52 +2,63 @@
 {% extends "base.jinja" %}
 {% import "home/chart.jinja" as cart %}
 {% import "home/text.jinja" as text %}
+{% import "home/modal.jinja" as modal %}
 
 {% block title %}{{title}}{% endblock %}
 
 {% block content %}
     <div class="container">
 
-        <div class="row mb-5">
-            <div class="col-md-6 mb-5 mb-md-0">
-                <div id="systemInfo">
-                    <h3>
-                        <i class="bi bi-info-circle"></i>
-                        System Info
-                    </h3>
-                    {{text.base('Uptime', '/api/sys/uptime', 'text', 15)}}
-                    {{text.base('Operating System', '/api/sys/info', 'OperatingSystem')}}
-                    {{text.base('Architecture', '/api/sys/info', 'Architecture')}}
-                    {{text.base('CPU Cores', '/api/sys/info', 'NCPU')}}
-                    {{text.base('RAM', '/api/sys/info', 'MemTotal')}}
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div id="diskInfo">
-                    <h3>
-                        <i class="bi bi-hdd"></i>
-                        Disk
-                    </h3>
-                    {{ cart.disk('disk') }}
-                </div>
-            </div>
+        <div class="d-flex justify-content-between align-items-center border-bottom mb-4 pb-2">
+            <strong>App</strong>
+            {{ modal.form_shortcut_app() }}
+        </div>
+        <div class="border-bottom mb-4 pb-4">
+            <div id="homeListShortcutApp" hx-get="/shortcut-app/list" hx-trigger="load, refresh from:body"></div>
         </div>
 
-        <div class="row align-items-start mb-5">
-            <div class="col-md-6 mb-5 mb-md-0">
-                <h3><i class="bi bi-cpu"></i> CPU</h3>
-                {{ cart.realtimeCPU('realtimeCPU') }}
+        <div class="border-bottom pb-4">
+            <div class="row mb-5">
+                <div class="col-md-6 mb-5 mb-md-0">
+                    <div id="systemInfo">
+                        <h4>
+                            <i class="bi bi-info-circle"></i>
+                            System Info
+                        </h4>
+                        {{text.base('Uptime', '/api/sys/uptime', 'text', 15)}}
+                        {{text.base('Operating System', '/api/sys/info', 'OperatingSystem')}}
+                        {{text.base('Architecture', '/api/sys/info', 'Architecture')}}
+                        {{text.base('CPU Cores', '/api/sys/info', 'NCPU')}}
+                        {{text.base('RAM', '/api/sys/info', 'MemTotal')}}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="diskInfo">
+                        <h4>
+                            <i class="bi bi-hdd"></i>
+                            Disk
+                        </h4>
+                        {{ cart.disk('disk') }}
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <h3><i class="bi bi-memory"></i> Memory</h3>
-                {{ cart.realtimeMemory('realtimeMemory') }}
-            </div>
-        </div>
 
-        <div class="row align-items-start">
-            <div class="col">
-                <h3><i class="bi bi-bar-chart-steps"></i> Resource Tracker</h3>
-                {{ cart.resourceUsage('resource') }}
+            <div class="row align-items-start mb-5">
+                <div class="col-md-6 mb-5 mb-md-0">
+                    <h4><i class="bi bi-cpu"></i> CPU</h4>
+                    {{ cart.realtimeCPU('realtimeCPU') }}
+                </div>
+                <div class="col-md-6">
+                    <h4><i class="bi bi-memory"></i> Memory</h4>
+                    {{ cart.realtimeMemory('realtimeMemory') }}
+                </div>
+            </div>
+
+            <div class="row align-items-start">
+                <div class="col">
+                    <h4><i class="bi bi-bar-chart-steps"></i> Resource Tracker</h4>
+                    {{ cart.resourceUsage('resource') }}
+                </div>
             </div>
         </div>
     </div>

@@ -13,17 +13,17 @@ load_dotenv()
 DEFAULT_DB_URL = "sqlite:///app/data/db.sqlite"
 DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DB_URL)
 
+connect_args = {}
 if DATABASE_URL == DEFAULT_DB_URL:
     print("\t[INFO] Using default database")
+    connect_args = {"check_same_thread": False}
     db_path = os.path.join(os.path.dirname(__file__), "data", "db.sqlite")
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
     conn = sqlite3.connect(db_path) 
     conn.close()
 
 # Koneksi ke database
-connect_args = {"check_same_thread": False}
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
