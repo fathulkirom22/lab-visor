@@ -1,19 +1,18 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Query
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from app.utils import minify_html
 from app.database import SessionDep
 from fastapi import Form
 from typing import Annotated
-from app.models import ShortcutApp
-from app.request import ShortcutAppCreate
+from app.models import ShortcutApp, CategoryApp
+from app.request import ShortcutAppCreate, CategoryAppCreate
 from sqlmodel import select
 
 html = str
 
 router = APIRouter(
     tags=["home"],
-    responses={404: {"description": "Not found"}},
     include_in_schema=False
 )
 
@@ -60,7 +59,33 @@ async def get_list_shortcut_app(
         res = templates.get_template(_tamplate).render({"item": item})
         return res
 
-    data = db.exec(select(ShortcutApp)).all()
+    data = db.exec(select(ShortcutApp).where(ShortcutApp.category_app_id == None)).all()
+    if len(data) <= 0:
+        html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
+        return HTMLResponse(content=html_content, status_code=200)
+    
+    html_content: html = f"""
+        <div class="row">
+            {''.join(map(card, data))}
+        </div>
+    """
+    return HTMLResponse(content=html_content, status_code=200)
+
+@router.get("/shortcut-app/list/{_id_category}", response_class=HTMLResponse)
+async def get_list_shortcut_app(
+    db: SessionDep,
+    _id_category: int
+):
+    def card(item: ShortcutApp):
+        _tamplate = "home/card-shortcut-app.jinja"
+        res = templates.get_template(_tamplate).render({"item": item})
+        return res
+
+    data = db.exec(select(ShortcutApp).where(ShortcutApp.category_app_id == _id_category)).all()
+    if len(data) <= 0:
+        html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
+        return HTMLResponse(content=html_content, status_code=200)
+    
     html_content: html = f"""
         <div class="row">
             {''.join(map(card, data))}
@@ -81,4 +106,73 @@ def delete_shortcut_app(
     db.commit()
     ctx = {"message": "Success delete shortcut !", "variant": "danger"}
     html_content: html = templates.get_template(_tamplate).render(ctx)
+    return HTMLResponse(content=html_content, status_code=200)
+
+@router.post("/category-app/save", response_class=HTMLResponse)
+async def post_shortcut_app(
+    db: SessionDep,
+    item: Annotated[CategoryAppCreate, Form()]
+):
+    _tamplate = "alert.jinja"
+    _item = CategoryApp(**item.model_dump())
+    if _item.id:
+        existing_item = db.get(CategoryApp, _item.id)
+        
+        if existing_item:
+            existing_item.sqlmodel_update(_item)
+            _item = existing_item
+        else:
+            raise HTTPException(status_code=404, detail="Shortcut app not found")
+
+    db.add(_item)
+    db.commit()
+    db.refresh(_item) 
+    ctx = {"message": "Success save category !", "variant": "success"}
+    html_content: html = templates.get_template(_tamplate).render(ctx)
+    return HTMLResponse(content=html_content, status_code=200)
+
+@router.get("/category-app/list", response_class=HTMLResponse)
+async def get_list_shortcut_app(
+    db: SessionDep
+):
+    def card(item: CategoryApp):
+        _tamplate = "home/card-category-app.jinja"
+        res = templates.get_template(_tamplate).render({"item": item})
+        return res
+
+    data = db.exec(select(CategoryApp)).all()
+    if len(data) <= 0:
+        html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
+        return HTMLResponse(content=html_content, status_code=200)
+    
+    data.append(
+        CategoryApp(
+            id=0,
+            name="Uncategory"
+        )
+    )
+    html_content: html = f"""
+        <div>
+            {''.join(map(card, data))}
+        </div>
+    """
+    return HTMLResponse(content=html_content, status_code=200)
+
+@router.get("/category-app/list/options", response_class=HTMLResponse)
+async def get_list_shortcut_app(
+    db: SessionDep,
+    default: Annotated[str, Query()] = None
+):
+    def card(item: CategoryApp):
+        id_default = int(default) if default else None
+        selected = 'selected' if item.id == id_default else ''
+        html_content: html = f"""<option value="{item.id}" {selected}>{item.name}</option>"""
+        return html_content
+
+    data = db.exec(select(CategoryApp)).all()
+    if len(data) <= 0:
+        html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
+        return HTMLResponse(content=html_content, status_code=200)
+    
+    html_content: html = ''.join(map(card, data))
     return HTMLResponse(content=html_content, status_code=200)

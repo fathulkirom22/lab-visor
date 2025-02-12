@@ -1,0 +1,60 @@
+
+{% extends "base.jinja" %}
+{% import "sys/chart.jinja" as cart %}
+{% import "sys/text.jinja" as text %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="border-bottom pb-4">
+            <div class="row mb-5">
+                <div class="col-md-6 mb-5 mb-md-0">
+                    <div id="systemInfo">
+                        <h4>
+                            <i class="bi bi-info-circle"></i>
+                            System Info
+                        </h4>
+                        {{text.base('Uptime', '/api/sys/uptime', 'text', 15)}}
+                        {{text.base('Operating System', '/api/sys/info', 'OperatingSystem')}}
+                        {{text.base('Architecture', '/api/sys/info', 'Architecture')}}
+                        {{text.base('CPU Cores', '/api/sys/info', 'NCPU')}}
+                        {{text.base('RAM', '/api/sys/info', 'MemTotal')}}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="diskInfo">
+                        <h4>
+                            <i class="bi bi-hdd"></i>
+                            Disk
+                        </h4>
+                        {{ cart.disk('disk') }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-start mb-5">
+                <div class="col-md-6 mb-5 mb-md-0">
+                    <h4><i class="bi bi-cpu"></i> CPU</h4>
+                    {{ cart.realtimeCPU('realtimeCPU') }}
+                </div>
+                <div class="col-md-6">
+                    <h4><i class="bi bi-memory"></i> Memory</h4>
+                    {{ cart.realtimeMemory('realtimeMemory') }}
+                </div>
+            </div>
+
+            <div class="row align-items-start">
+                <div class="col">
+                    <h4><i class="bi bi-bar-chart-steps"></i> Resource Tracker</h4>
+                    {{ cart.resourceUsage('resource') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        
+    </script>
+{% endblock %}

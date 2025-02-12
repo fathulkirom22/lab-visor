@@ -6,11 +6,11 @@
             <div class="d-flex column flex-column justify-content-between h-100">
                 <div class="d-flex justify-content-between">
                     <div class="mb-4">
-                        <h5 class="card-title">{{item.name}}</h5>
+                        <h5 class="card-title"><i class="bi bi-{{item.icon}}"></i> {{item.name}}</h5>
                         <p class="card-text text-white">{{item.description}}</p>
                     </div>
-                    <div>
-                        {{ modal.form_shortcut_app(true, item) }}
+                    <div class="d-flex align-items-start">
+                        {{ modal.form_shortcut_app(true, item, item.category_app_id) }}
                         <button
                             id="deleteShortcutApp"
                             type="button" 
@@ -18,14 +18,14 @@
                             hx-delete="/shortcut-app/{{item.id}}"
                             confirm-with-sweet-alert='true'
                             hx-target="#_alert"
-                            hx-on::after-request="htmx.trigger('#homeListShortcutApp', 'refresh');"
+                            hx-on::after-request="htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh');"
                         >
                             <i class="bi bi-x-lg"></i>
                         </button>
                     </div>
                 </div>
                 <div>
-                    <a href="{{item.link}}" class="btn btn-outline-dark">Go somewhere</a>
+                    <a href="{{item.link}}" class="btn btn-outline-dark">Launch App</a>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@ document.body.addEventListener('htmx:configRequest', function (evt) {
            if (confirmed.isConfirmed) {
                 // Jalankan request HTMX secara manual setelah konfirmasi
                 htmx.ajax('DELETE', '/shortcut-app/{{item.id}}', {target: '#_alert'}).then(res=>{
-                    htmx.trigger('#homeListShortcutApp', 'refresh');
+                    htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh');
                 });
             }
         });
