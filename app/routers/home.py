@@ -164,7 +164,7 @@ async def get_list_shortcut_app(
     default: Annotated[str, Query()] = None
 ):
     def card(item: CategoryApp):
-        id_default = int(default) if default else None
+        id_default = int(default) if default or default != "None" else None
         selected = 'selected' if item.id == id_default else ''
         html_content: html = f"""<option value="{item.id}" {selected}>{item.name}</option>"""
         return html_content
