@@ -6,7 +6,7 @@
 </div>
 <div class="mb-4 pb-4">
     {% if item.id %}
-        <div id="homeListShortcutApp-{{item.id}}" hx-get="/shortcut-app/list/{{item.id}}" hx-trigger="load, refresh from:body"></div>
+        <div id="homeListShortcutApp-{{item.id}}" hx-get="/shortcut-app/list/{{item.id}}" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)"></div>
     {% else %}
         <div id="homeListShortcutApp-all" hx-get="/shortcut-app/list" hx-trigger="load, refresh from:body"></div>
     {% endif %}

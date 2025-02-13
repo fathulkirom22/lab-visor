@@ -22,13 +22,17 @@
                         hx-swap="afterbegin"
                         hx-on::after-request="
                             if(event.detail.successful){
-                                if(!{{edit | tojson}}) {
+                                const isEdit = {{edit | tojson}};
+                                if(!isEdit) {
                                     this.reset();
                                 }
                                 let modalEL = document.getElementById('formShortcutApp-{{category_app_id}}-{{item.id}}');
                                 let modal = bootstrap.Modal.getInstance(modalEL);
+                                if (!modal) {
+                                    return
+                                }
                                 modal.hide();
-                                htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh'); 
+                                htmx.trigger('#homeListShortcutApp-{{category_app_id}}', 'refresh'); 
                             }
                         "
                     >

@@ -7,7 +7,7 @@
 {% block content %}
     <div class="container">
 
-        <div id="homeListCategoryApp" hx-get="/category-app/list" hx-trigger="load, refresh from:body"></div>
+        <div id="homeListCategoryApp" hx-get="/category-app/list" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)"></div>
 
         <div class="border-top d-flex justify-content-center pt-5">
             {{ modal.form_category_app() }}

@@ -64,11 +64,7 @@ async def get_list_shortcut_app(
         html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
         return HTMLResponse(content=html_content, status_code=200)
     
-    html_content: html = f"""
-        <div class="row">
-            {''.join(map(card, data))}
-        </div>
-    """
+    html_content: html = f"""<div class="row">{''.join(map(card, data))}</div>"""
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get("/shortcut-app/list/{_id_category}", response_class=HTMLResponse)
@@ -86,11 +82,7 @@ async def get_list_shortcut_app(
         html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
         return HTMLResponse(content=html_content, status_code=200)
     
-    html_content: html = f"""
-        <div class="row">
-            {''.join(map(card, data))}
-        </div>
-    """
+    html_content: html = f"""<div class="row">{''.join(map(card, data))}</div>"""
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.delete("/shortcut-app/{_id}", response_class=HTMLResponse)
@@ -104,7 +96,7 @@ def delete_shortcut_app(
         raise HTTPException(status_code=404, detail="Shortcut not found")
     db.delete(_item)
     db.commit()
-    ctx = {"message": "Success delete shortcut !", "variant": "danger"}
+    ctx = {"message": f"Success delete shortcut {_item.name} !", "variant": "danger"}
     html_content: html = templates.get_template(_tamplate).render(ctx)
     return HTMLResponse(content=html_content, status_code=200)
 
@@ -145,17 +137,13 @@ async def get_list_shortcut_app(
         html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
         return HTMLResponse(content=html_content, status_code=200)
     
-    data.append(
-        CategoryApp(
-            id=0,
-            name="Uncategory"
-        )
-    )
-    html_content: html = f"""
-        <div>
-            {''.join(map(card, data))}
-        </div>
-    """
+    # data.append(
+    #     CategoryApp(
+    #         id=0,
+    #         name="Uncategory"
+    #     )
+    # )
+    html_content: html = f"""<div>{''.join(map(card, data))}</div>"""
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get("/category-app/list/options", response_class=HTMLResponse)

@@ -12,11 +12,17 @@
                     <div class="d-flex align-items-start">
                         {{ modal.form_shortcut_app(true, item, item.category_app_id) }}
                         <button
-                            id="deleteShortcutApp"
+                            id="deleteShortcutApp-{{item.id}}"
                             type="button" 
                             class="btn p-0 m-0"
                             hx-delete="/shortcut-app/{{item.id}}"
                             confirm-with-sweet-alert='true'
+                            hx-trigger='confirmed'
+                            onClick="Swal.fire({title: 'Confirm', text:'Do you want to continue?'}).then((result)=>{
+                                if(result.isConfirmed){
+                                htmx.trigger(this, 'confirmed');  
+                                } 
+                            })"
                             hx-target="#_alert"
                             hx-on::after-request="htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh');"
                         >
@@ -31,25 +37,3 @@
         </div>
     </div>
 </div>
-
-<script type="module">
-document.body.addEventListener('htmx:configRequest', function (evt) {
-    if (evt.target.matches("[confirm-with-sweet-alert='true']")) {
-        evt.preventDefault();
-        new Swal({
-            title: "Are you sure?",
-            text: "Are you sure you are sure?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then((confirmed) => {
-           if (confirmed.isConfirmed) {
-                // Jalankan request HTMX secara manual setelah konfirmasi
-                htmx.ajax('DELETE', '/shortcut-app/{{item.id}}', {target: '#_alert'}).then(res=>{
-                    htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh');
-                });
-            }
-        });
-    }
-});
-</script>
