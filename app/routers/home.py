@@ -137,12 +137,6 @@ async def get_list_shortcut_app(
         html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
         return HTMLResponse(content=html_content, status_code=200)
     
-    # data.append(
-    #     CategoryApp(
-    #         id=0,
-    #         name="Uncategory"
-    #     )
-    # )
     html_content: html = f"""<div>{''.join(map(card, data))}</div>"""
     return HTMLResponse(content=html_content, status_code=200)
 
@@ -163,4 +157,25 @@ async def get_list_shortcut_app(
         return HTMLResponse(content=html_content, status_code=200)
     
     html_content: html = ''.join(map(card, data))
+    return HTMLResponse(content=html_content, status_code=200)
+
+@router.delete("/category-app/{_id}", response_class=HTMLResponse)
+def delete_shortcut_app(
+    _id: int,
+    db: SessionDep
+):
+    _tamplate = "alert.jinja"
+
+    _apps = db.exec(select(ShortcutApp).where(ShortcutApp.category_app_id == _id)).all()
+    if(len(_apps)):
+        raise HTTPException(status_code=400, detail="Category not empty!")
+
+    _item = db.get(CategoryApp, _id)
+    if not _item:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    db.delete(_item)
+    db.commit()
+    ctx = {"message": f"Success delete category {_item.name} !", "variant": "danger"}
+    html_content: html = templates.get_template(_tamplate).render(ctx)
     return HTMLResponse(content=html_content, status_code=200)

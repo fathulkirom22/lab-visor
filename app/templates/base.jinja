@@ -21,28 +21,34 @@
     </script>
 </head>
 <body class="min-vh-100">
+
+    <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+        <div id="error-toast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body"></div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container">
-            <div class="d-flex justify-content-between w-100 align-items-center">
-                <div class="d-flex">
-                    <a class="navbar-brand" href="/">Dashboard</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/sys">System Info</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled" aria-disabled="true">About</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <a class="navbar-brand" href="/">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sys">System Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">About</a>
+                    </li>
+                </ul>
                 <div>
                     <button id="btnSwitchTheme" class="btn"><i id="iconSwitchTheme" class="bi bi-moon"></i></button>
                 </div>
@@ -59,7 +65,7 @@
         <div class="container">
             <div class="border-top d-flex justify-content-between pt-4">
                 <div>
-                    <p>Server Resource Monitoring</p>
+                    <p>Home Lab Landingpage & Resource Monitoring</p>
                 </div>
                 <div>
                     <p>Lab Visor</p>
@@ -70,24 +76,40 @@
 
     <script type="module">
         const iconSwitchTheme = document.getElementById('iconSwitchTheme');
-        document.getElementById('btnSwitchTheme').addEventListener('click',()=>{
-            if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
-                document.documentElement.setAttribute('data-bs-theme','light')
+        const btnSwitchTheme = document.getElementById('btnSwitchTheme');
+
+        // Retrieve theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            iconSwitchTheme.classList.remove('bi-moon');
+            iconSwitchTheme.classList.add('bi-sun');
+        } else {
+            iconSwitchTheme.classList.remove('bi-sun');
+            iconSwitchTheme.classList.add('bi-moon');
+        }
+
+        btnSwitchTheme.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            if (newTheme === 'dark') {
+                iconSwitchTheme.classList.remove('bi-moon');
+                iconSwitchTheme.classList.add('bi-sun');
+            } else {
                 iconSwitchTheme.classList.remove('bi-sun');
                 iconSwitchTheme.classList.add('bi-moon');
             }
-            else {
-                document.documentElement.setAttribute('data-bs-theme','dark')
-                iconSwitchTheme.classList.remove('bi-moon');
-                iconSwitchTheme.classList.add('bi-sun');
-            }
         });
+
         document.body.addEventListener('htmx:error', function(event) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-            });
+            let toastBody = document.querySelector("#error-toast .toast-body");
+            toastBody.textContent = `Error ${event.detail.errorInfo.xhr.status}: ${JSON.parse(event.detail.errorInfo.xhr.response).detail}`;
+
+            let toast = new bootstrap.Toast(document.getElementById("error-toast"));
+            toast.show();
         });
     </script>
 </body>
