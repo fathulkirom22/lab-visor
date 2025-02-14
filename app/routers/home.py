@@ -34,6 +34,7 @@ async def post_shortcut_app(
 ):
     _tamplate = "alert.jinja"
     _item = ShortcutApp(**item.model_dump())
+    _item.icon = _item.icon.lower()
     if _item.id:
         existing_item = db.get(ShortcutApp, _item.id)
         
@@ -107,6 +108,7 @@ async def post_shortcut_app(
 ):
     _tamplate = "alert.jinja"
     _item = CategoryApp(**item.model_dump())
+    _item.icon = _item.icon.lower()
     if _item.id:
         existing_item = db.get(CategoryApp, _item.id)
         

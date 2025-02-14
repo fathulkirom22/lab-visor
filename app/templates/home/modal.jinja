@@ -74,23 +74,27 @@
                             <textarea class="form-control" id="description-text" name="description" placeholder="Input description">{{item.description}}</textarea>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <button
-                                id="deleteShortcutApp-{{item.id}}"
-                                type="button" 
-                                class="btn btn-outline-danger"
-                                hx-delete="/shortcut-app/{{item.id}}"
-                                confirm-with-sweet-alert='true'
-                                hx-trigger='confirmed'
-                                onClick="Swal.fire({title: 'Confirm', text:'Do you want to continue?'}).then((result)=>{
-                                    if(result.isConfirmed){
-                                    htmx.trigger(this, 'confirmed');  
-                                    } 
-                                })"
-                                hx-target="#_alert"
-                                hx-on::after-request="htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh');"
-                            >
-                                Delete
-                            </button>
+                            <div>
+                                {% if edit %}
+                                    <button
+                                        id="deleteShortcutApp-{{item.id}}"
+                                        type="button" 
+                                        class="btn btn-outline-danger"
+                                        hx-delete="/shortcut-app/{{item.id}}"
+                                        confirm-with-sweet-alert='true'
+                                        hx-trigger='confirmed'
+                                        onClick="Swal.fire({title: 'Confirm', text:'Do you want to continue?'}).then((result)=>{
+                                            if(result.isConfirmed){
+                                            htmx.trigger(this, 'confirmed');  
+                                            } 
+                                        })"
+                                        hx-target="#_alert"
+                                        hx-on::after-request="htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh');"
+                                    >
+                                        Delete
+                                    </button>
+                                {% endif %}
+                            </div>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-outline-primary">Save</button>
@@ -152,20 +156,24 @@
                             <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}" placeholder="Ex: info-circle">
                         </div>
                         <div class="d-flex justify-content-between">
-                            <button
-                                type="button"
-                                class="btn btn-outline-danger"
-                                id="deleteCategoryApp-{{item.id}}"
-                                hx-delete="/category-app/{{item.id}}"
-                                hx-trigger='confirmed'
-                                onClick="Swal.fire({title: 'Delete Category', text:'Do you want to continue?'}).then((result)=>{
-                                    if(result.isConfirmed){
-                                        htmx.trigger(this, 'confirmed');  
-                                    } 
-                                })"
-                                hx-target="#_alert"
-                                hx-on::after-request="htmx.trigger('#homeListShortcutApp-all', 'refresh');"
-                            >Delete</button>
+                            <diV>
+                                {% if edit %}
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-danger"
+                                        id="deleteCategoryApp-{{item.id}}"
+                                        hx-delete="/category-app/{{item.id}}"
+                                        hx-trigger='confirmed'
+                                        onClick="Swal.fire({title: 'Delete Category', text:'Do you want to continue?'}).then((result)=>{
+                                            if(result.isConfirmed){
+                                                htmx.trigger(this, 'confirmed');  
+                                            } 
+                                        })"
+                                        hx-target="#_alert"
+                                        hx-on::after-request="htmx.trigger('#homeListShortcutApp-all', 'refresh');"
+                                    >Delete</button>
+                                {% endif %}
+                            </diV>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-outline-primary">Save</button>
