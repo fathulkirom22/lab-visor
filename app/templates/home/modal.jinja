@@ -1,11 +1,13 @@
 {% macro form_shortcut_app(edit = false, item = None, category_app_id = 0) %}
-    <button type="button" class="btn p-0 m-0" data-bs-toggle="modal" data-bs-target="#formShortcutApp-{{category_app_id}}-{{item.id}}" data-bs-whatever="@getbootstrap">
-        {% if edit %}
+    {% if edit %}
+        <button type="button" class="btn p-0 m-0" data-bs-toggle="modal" data-bs-target="#formShortcutApp-{{category_app_id}}-{{item.id}}" data-bs-whatever="@getbootstrap">
             <i class="bi bi-pencil-square"></i>
-        {% else %}
+        </button>
+    {% else %}
+        <button type="button" class="btn m-0" data-bs-toggle="modal" data-bs-target="#formShortcutApp-{{category_app_id}}-{{item.id}}" data-bs-whatever="@getbootstrap">
             <i class="bi bi-plus-lg"></i>
-        {% endif %}
-    </button>
+        </button>
+    {% endif %}
 
     <div class="modal fade" id="formShortcutApp-{{category_app_id}}-{{item.id}}" tabindex="-1" aria-labelledby="formShortcutAppLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -41,19 +43,19 @@
                         {% endif %}
 
                         <div class="mb-3">
-                            <label for="name-app" class="col-form-label">Name:</label>
-                            <input type="text" class="form-control" id="name-app" name="name" value="{{item.name}}">
+                            <label for="name-app" class="col-form-label">Name</label>
+                            <input type="text" class="form-control" id="name-app" name="name" value="{{item.name}}" placeholder="App name">
                         </div>
                         <div class="mb-3">
-                            <label for="link-app" class="col-form-label">Link:</label>
-                            <input type="text" class="form-control" id="link-app" name="link" value="{{item.link}}">
+                            <label for="link-app" class="col-form-label">Link <a href="https://icons.getbootstrap.com/"><i class="bi bi-info-circle"></i></a></label>
+                            <input type="text" class="form-control" id="link-app" name="link" value="{{item.link}}" placeholder="Full path link">
                         </div>
                         <div class="mb-3">
-                            <label for="icon-app" class="col-form-label">Icon:</label>
-                            <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}">
+                            <label for="icon-app" class="col-form-label">Icon</label>
+                            <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}" placeholder="Ex: x-circle">
                         </div>
                         <div class="mb-3">
-                            <label for="category-app" class="col-form-label">Category:</label>
+                            <label for="category-app" class="col-form-label">Category</label>
                             <select 
                                 id="category-app-{{category_app_id}}-{{item.id}}" 
                                 hx-get="/category-app/list/options?default={{category_app_id}}"
@@ -68,12 +70,31 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="description-text" class="col-form-label">Description:</label>
-                            <textarea class="form-control" id="description-text" name="description">{{item.description}}</textarea>
+                            <label for="description-text" class="col-form-label">Description</label>
+                            <textarea class="form-control" id="description-text" name="description" placeholder="Input description">{{item.description}}</textarea>
                         </div>
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                        <div class="d-flex justify-content-between">
+                            <button
+                                id="deleteShortcutApp-{{item.id}}"
+                                type="button" 
+                                class="btn btn-outline-danger"
+                                hx-delete="/shortcut-app/{{item.id}}"
+                                confirm-with-sweet-alert='true'
+                                hx-trigger='confirmed'
+                                onClick="Swal.fire({title: 'Confirm', text:'Do you want to continue?'}).then((result)=>{
+                                    if(result.isConfirmed){
+                                    htmx.trigger(this, 'confirmed');  
+                                    } 
+                                })"
+                                hx-target="#_alert"
+                                hx-on::after-request="htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh');"
+                            >
+                                Delete
+                            </button>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-outline-primary">Save</button>
+                            </div>
                         </div>
                     </form>
                 </div>

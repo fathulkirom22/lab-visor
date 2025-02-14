@@ -40,13 +40,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link" aria-current="page" href="/sys">System Info</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/sys">System Info</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">About</a>
+                        <a class="nav-link" href="https://github.com/fathulkirom22/lab-visor" target="_blank">About</a>
                     </li>
                 </ul>
                 <div>
@@ -65,52 +62,12 @@
         <div class="container">
             <div class="border-top d-flex justify-content-between pt-4">
                 <div>
-                    <p>Home Lab Landingpage & Resource Monitoring</p>
-                </div>
-                <div>
-                    <p>Lab Visor</p>
+                    <p><b>Lab Visor</b> | Home Lab Landingpage & Resource Monitoring</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script type="module">
-        const iconSwitchTheme = document.getElementById('iconSwitchTheme');
-        const btnSwitchTheme = document.getElementById('btnSwitchTheme');
-
-        // Retrieve theme from localStorage
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-bs-theme', savedTheme);
-        if (savedTheme === 'dark') {
-            iconSwitchTheme.classList.remove('bi-moon');
-            iconSwitchTheme.classList.add('bi-sun');
-        } else {
-            iconSwitchTheme.classList.remove('bi-sun');
-            iconSwitchTheme.classList.add('bi-moon');
-        }
-
-        btnSwitchTheme.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-
-            if (newTheme === 'dark') {
-                iconSwitchTheme.classList.remove('bi-moon');
-                iconSwitchTheme.classList.add('bi-sun');
-            } else {
-                iconSwitchTheme.classList.remove('bi-sun');
-                iconSwitchTheme.classList.add('bi-moon');
-            }
-        });
-
-        document.body.addEventListener('htmx:error', function(event) {
-            let toastBody = document.querySelector("#error-toast .toast-body");
-            toastBody.textContent = `Error ${event.detail.errorInfo.xhr.status}: ${JSON.parse(event.detail.errorInfo.xhr.response).detail}`;
-
-            let toast = new bootstrap.Toast(document.getElementById("error-toast"));
-            toast.show();
-        });
-    </script>
+    <script type="module" src="/static/js/base.js"></script>
 </body>
 </html>

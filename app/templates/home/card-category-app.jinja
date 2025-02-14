@@ -6,8 +6,12 @@
         {{ item.name }}
     </h5>
     <div class="d-flex">
-        {{ modal.form_category_app(true, item) }}
-        {{ modal.form_shortcut_app(false, none, item.id) }}
+        <span>
+            {{ modal.form_shortcut_app(false, none, item.id) }}
+        </span>
+        <span>
+            {{ modal.form_category_app(true, item) }}
+        </span>
     </div>
 </div>
 <div class="mb-4 pb-4">

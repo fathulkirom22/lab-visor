@@ -11,27 +11,10 @@
                     </div>
                     <div class="d-flex align-items-start">
                         {{ modal.form_shortcut_app(true, item, item.category_app_id) }}
-                        <button
-                            id="deleteShortcutApp-{{item.id}}"
-                            type="button" 
-                            class="btn p-0 m-0"
-                            hx-delete="/shortcut-app/{{item.id}}"
-                            confirm-with-sweet-alert='true'
-                            hx-trigger='confirmed'
-                            onClick="Swal.fire({title: 'Confirm', text:'Do you want to continue?'}).then((result)=>{
-                                if(result.isConfirmed){
-                                htmx.trigger(this, 'confirmed');  
-                                } 
-                            })"
-                            hx-target="#_alert"
-                            hx-on::after-request="htmx.trigger('#homeListShortcutApp-{{item.category_app_id}}', 'refresh');"
-                        >
-                            <i class="bi bi-x-lg"></i>
-                        </button>
                     </div>
                 </div>
                 <div>
-                    <a href="{{item.link}}" class="btn btn-outline-dark">Launch App</a>
+                    <a href="{{item.link}}" target="_blank" class="btn btn-outline-dark">Launch App</a>
                 </div>
             </div>
         </div>
