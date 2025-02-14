@@ -1,8 +1,7 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
-from starlette.responses import HTMLResponse
 from .routers import home
 from .routers import sys
 from .routers.api import api_router
@@ -39,4 +38,5 @@ app.include_router(sys.router)
 
 @app.exception_handler(404)
 async def custom_404_handler(request, __):
+    """404 error handler"""
     return templates.TemplateResponse("404.jinja", {"request": request})

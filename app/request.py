@@ -1,8 +1,10 @@
+"""module for models payload & form request"""
 from typing import Optional
 
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 
 class ShortcutAppCreate(BaseModel):
+    """model for create shortcut app"""
     id: Optional[int] = None
     name: str
     link: str
@@ -11,6 +13,7 @@ class ShortcutAppCreate(BaseModel):
     category_app_id: Optional[int] = None
 
 class CategoryAppCreate(BaseModel):
+    """model for create category app"""
     id: Optional[int] = None
     name: str
     icon: Optional[str] = None

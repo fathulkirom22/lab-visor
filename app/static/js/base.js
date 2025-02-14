@@ -1,7 +1,6 @@
 const iconSwitchTheme = document.getElementById('iconSwitchTheme');
 const btnSwitchTheme = document.getElementById('btnSwitchTheme');
 
-// Retrieve theme from localStorage
 const savedTheme = localStorage.getItem('theme') || 'light';
 document.documentElement.setAttribute('data-bs-theme', savedTheme);
 if (savedTheme === 'dark') {
@@ -29,7 +28,7 @@ btnSwitchTheme.addEventListener('click', () => {
 
 document.body.addEventListener('htmx:error', function(event) {
     let toastBody = document.querySelector("#error-toast .toast-body");
-    toastBody.textContent = `Error ${event.detail.errorInfo.xhr.status}: ${JSON.parse(event.detail.errorInfo.xhr.response).detail}`;
+    toastBody.textContent = `${JSON.parse(event.detail.errorInfo.xhr.response).detail}`;
 
     let toast = new bootstrap.Toast(document.getElementById("error-toast"));
     toast.show();
