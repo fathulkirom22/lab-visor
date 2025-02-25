@@ -8,7 +8,7 @@ on:
 env:
   GITEA_INSTANCE_URL: http://gitea.home
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  SQLITE_DB_PATH: ./app/data/db.sqlite
+  SQLITE_DB_PATH: /data/lab-visor.sqlite
 
 jobs:
   build-and-deploy:
