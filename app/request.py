@@ -18,3 +18,4 @@ class CategoryAppCreate(BaseModel):
     name: str
     icon: Optional[str] = None
     theme: str = 'primary'
+    order: int = 99

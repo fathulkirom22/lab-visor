@@ -156,17 +156,32 @@
                             <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}" placeholder="Ex: info-circle">
                         </div>
                         <div class="mb-3">
-                            <label for="theme-app-{{item.id}}" class="col-form-label">Theme</label>
-                            <select id="theme-app-{{item.id}}" class="form-select" name="theme" value="{{item.theme}}">
-                                <option value="primary"> Primary </option>
-                                <option value="secondary"> Secondary </option>
-                                <option value="tertiary"> Tertiary </option>
-                                <option value="success"> Success </option>
-                                <option value="danger"> Danger </option>
-                                <option value="warning"> Warning </option>
-                                <option value="info"> Info </option>
-                                <option value="light"> Light </option>
-                                <option value="dark"> Dark </option>
+                            <label for="theme-category-{{item.id}}" class="col-form-label">Theme</label>
+                            <select 
+                                id="theme-category-{{item.id}}" 
+                                hx-get="/category-app/theme/options?default={{item.theme}}"
+                                hx-trigger="load"
+                                hx-target="#theme-category-{{item.id}}" 
+                                hx-swap="innerHTML"
+                                class="form-select" 
+                                name="theme"
+                            >
+                                <option>Loading...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="order-category" class="col-form-label">Order</label>
+                            <select 
+                                id="order-category-{{item.id}}" 
+                                hx-get="/category-app/order/options?default={{item.order}}"
+                                hx-trigger="load"
+                                hx-target="#order-category-{{item.id}}" 
+                                hx-swap="innerHTML"
+                                class="form-select"
+                                name="order"
+                                hx-on::after-request="false"
+                            >
+                                <option>Loading...</option>
                             </select>
                         </div>
                         <div class="d-flex justify-content-between">

@@ -5,6 +5,15 @@ from .database import create_db_and_tables, SessionDep, get_session, engine
 from .models import SysDataTracker
 from sqlmodel import Session, select, func, text
 import psutil
+from alembic import command
+from alembic.config import Config
+
+def run_migrations():
+    try:
+        alembic_cfg = Config("alembic.prod.ini")
+        command.upgrade(alembic_cfg, "head")
+    except Exception as e:
+        print("Error migration", e)
 
 def track_resource_usage():
     with Session(engine) as session:
@@ -30,6 +39,9 @@ def track_resource_usage():
 @asynccontextmanager
 async def lifespan(app:FastAPI):
     create_db_and_tables()
+
+    run_migrations()
+    
     scheduler = BackgroundScheduler()
     scheduler.add_job(track_resource_usage,"interval", seconds=900, misfire_grace_time=5, coalesce=True)
     scheduler.start()

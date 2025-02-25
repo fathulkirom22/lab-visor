@@ -1,13 +1,12 @@
-from fastapi import APIRouter, Request, HTTPException, Query
+from typing import Annotated
+from fastapi import APIRouter, Request, HTTPException, Query, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from sqlmodel import select, update, func
 from app.utils import minify_html
-from app.database import SessionDep
-from fastapi import Form
-from typing import Annotated
 from app.models import ShortcutApp, CategoryApp
+from app.database import SessionDep
 from app.request import ShortcutAppCreate, CategoryAppCreate
-from sqlmodel import select
 
 html = str
 
@@ -109,6 +108,15 @@ async def post_shortcut_app(
     _tamplate = "alert.jinja"
     _item = CategoryApp(**item.model_dump())
     _item.icon = _item.icon.lower()
+
+    if _item.order:
+        db.exec(
+            update(CategoryApp).where(
+                CategoryApp.order >= _item.order,
+                CategoryApp.order < 99
+            ).values(order=CategoryApp.order + 1)
+        )
+
     if _item.id:
         existing_item = db.get(CategoryApp, _item.id)
         
@@ -134,7 +142,7 @@ async def get_list_shortcut_app(
         res = templates.get_template(_tamplate).render({"item": item})
         return res
 
-    data = db.exec(select(CategoryApp)).all()
+    data = db.exec(select(CategoryApp).order_by(CategoryApp.order)).all()
     if len(data) <= 0:
         html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
         return HTMLResponse(content=html_content, status_code=200)
@@ -143,13 +151,13 @@ async def get_list_shortcut_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get("/category-app/list/options", response_class=HTMLResponse)
-async def get_list_shortcut_app(
+async def get_options_shortcut_app(
     db: SessionDep,
-    default: Annotated[str, Query()] = None
+    default: Annotated[str, Query()] = ""
 ):
     def card(item: CategoryApp):
-        id_default = int(default) if default and default != "None" else None
-        selected = 'selected' if item.id == id_default else ''
+        id_default = None if not default else int(default)
+        selected = 'selected' if item.id == id_default else ""
         html_content: html = f"""<option value="{item.id}" {selected}>{item.name}</option>"""
         return html_content
 
@@ -169,15 +177,50 @@ def delete_shortcut_app(
     _tamplate = "alert.jinja"
 
     _apps = db.exec(select(ShortcutApp).where(ShortcutApp.category_app_id == _id)).all()
+
     if(len(_apps)):
         raise HTTPException(status_code=400, detail="Category not empty!")
 
     _item = db.get(CategoryApp, _id)
     if not _item:
         raise HTTPException(status_code=404, detail="Category not found")
-    
+
     db.delete(_item)
     db.commit()
     ctx = {"message": f"Success delete category {_item.name} !", "variant": "danger"}
     html_content: html = templates.get_template(_tamplate).render(ctx)
+    return HTMLResponse(content=html_content, status_code=200)
+
+@router.get("/category-app/order/options", response_class=HTMLResponse)
+async def get_order_options_shortcut_app(
+    db: SessionDep,
+    default: Annotated[str, Query()] = ""
+):
+    def card(item: int, total: int):
+        value = item + 1
+        id_default = total if not default else int(default)
+        selected = "selected" if value == id_default else ""
+        html_content: html = f"""<option value="{value}" {selected}>{value}</option>"""
+        return html_content
+
+    total = db.exec(select(func.count()).select_from(CategoryApp)).one()
+    
+    if not default:
+        total += 1
+
+    html_content: html = "<option value='99'>-</option>" + "".join(map(lambda x: card(x, total), range(total)))
+    return HTMLResponse(content=html_content, status_code=200)
+
+@router.get("/category-app/theme/options", response_class=HTMLResponse)
+async def get_theme_options_shortcut_app(
+    default: Annotated[str, Query()] = ""
+):
+    THEMES = ["primary", "secondary", "tertiary", "success", "danger", "warning", "info", "light", "dark"]
+
+    def card(item: str):
+        selected = "selected" if item == default else ""
+        html_content: html = f"""<option value="{item}" {selected}>{item.title()}</option>"""
+        return html_content
+
+    html_content: html = "".join(map(card, THEMES))
     return HTMLResponse(content=html_content, status_code=200)

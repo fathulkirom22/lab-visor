@@ -24,6 +24,7 @@ class CategoryApp(BaseModel, table=True):
     name: str
     icon: Optional[str] = Field(default=None)
     theme: str = Field(default='primary')
+    order: int = Field(default=99)
     apps: Optional[list["ShortcutApp"]] = Relationship(back_populates="category_app")
 
 class ShortcutApp(BaseModel, table=True):
