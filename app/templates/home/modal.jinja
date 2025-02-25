@@ -155,6 +155,20 @@
                             <label for="icon-app" class="col-form-label">Icon <a href="https://icons.getbootstrap.com/"><i class="bi bi-info-circle"></i></a></label>
                             <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}" placeholder="Ex: info-circle">
                         </div>
+                        <div class="mb-3">
+                            <label for="theme-app-{{item.id}}" class="col-form-label">Theme</label>
+                            <select id="theme-app-{{item.id}}" class="form-select" name="theme">
+                                <option value="primary"> Primary </option>
+                                <option value="secondary"> Secondary </option>
+                                <option value="tertiary"> Tertiary </option>
+                                <option value="success"> Success </option>
+                                <option value="danger"> Danger </option>
+                                <option value="warning"> Warning </option>
+                                <option value="info"> Info </option>
+                                <option value="light"> Light </option>
+                                <option value="dark"> Dark </option>
+                            </select>
+                        </div>
                         <div class="d-flex justify-content-between">
                             <diV>
                                 {% if edit %}

@@ -60,7 +60,7 @@ async def get_list_shortcut_app(
         res = templates.get_template(_tamplate).render({"item": item})
         return res
 
-    data = db.exec(select(ShortcutApp).where(ShortcutApp.category_app_id == None)).all()
+    data = db.exec(select(ShortcutApp).where(ShortcutApp.category_app_id == None).join(CategoryApp, ShortcutApp.category_app_id == CategoryApp.id)).all()
     if len(data) <= 0:
         html_content: html = """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
         return HTMLResponse(content=html_content, status_code=200)

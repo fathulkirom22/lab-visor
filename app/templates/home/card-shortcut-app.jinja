@@ -1,7 +1,7 @@
 {% import "home/modal.jinja" as modal %}
 
 <div class="col-sm-3 p-2">
-    <div class="card bg-info h-100">
+    <div class="card border-{{item.category_app.theme}} text-{{item.category_app.theme}} color-{{item.category_app.theme}} h-100">
         <div class="card-body h-100">
             <div class="d-flex column flex-column justify-content-between h-100">
                 <div class="d-flex justify-content-between">
@@ -14,7 +14,7 @@
                     </div>
                 </div>
                 <div>
-                    <a href="{{item.link}}" target="_blank" class="btn btn-outline-dark">Launch App</a>
+                    <a href="{{item.link}}" target="_blank" class="btn btn-{{item.category_app.theme}}">Launch App</a>
                 </div>
             </div>
         </div>
