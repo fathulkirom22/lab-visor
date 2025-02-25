@@ -33,6 +33,9 @@ jobs:
       - name: Ensure Database Directory Exists
         run: mkdir -p $(dirname "${{ env.SQLITE_DB_PATH }}")
 
+      - name: Copy alembic.prod.ini to alembic.ini
+        run: cp alembic.prod.ini alembic.ini
+        
       # Jalankan Alembic Migration
       - name: Run Alembic Migration
         env:
