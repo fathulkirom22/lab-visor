@@ -68,7 +68,7 @@ async def get_list_shortcut_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get("/shortcut-app/list/{_id_category}", response_class=HTMLResponse)
-async def get_list_shortcut_app(
+async def get_list_shortcut_app_by_id(
     db: SessionDep,
     _id_category: int
 ):
@@ -101,7 +101,7 @@ def delete_shortcut_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.post("/category-app/save", response_class=HTMLResponse)
-async def post_shortcut_app(
+async def post_category_app(
     db: SessionDep,
     item: Annotated[CategoryAppCreate, Form()]
 ):
@@ -124,7 +124,7 @@ async def post_shortcut_app(
             existing_item.sqlmodel_update(_item)
             _item = existing_item
         else:
-            raise HTTPException(status_code=404, detail="Shortcut app not found")
+            raise HTTPException(status_code=404, detail="Category app not found")
 
     db.add(_item)
     db.commit()
@@ -134,7 +134,7 @@ async def post_shortcut_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get("/category-app/list", response_class=HTMLResponse)
-async def get_list_shortcut_app(
+async def get_list_category_app(
     db: SessionDep
 ):
     def card(item: CategoryApp):
@@ -151,7 +151,7 @@ async def get_list_shortcut_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get("/category-app/list/options", response_class=HTMLResponse)
-async def get_options_shortcut_app(
+async def get_options_category_app(
     db: SessionDep,
     default: Annotated[str, Query()] = ""
 ):
@@ -170,7 +170,7 @@ async def get_options_shortcut_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.delete("/category-app/{_id}", response_class=HTMLResponse)
-def delete_shortcut_app(
+def delete_category_app(
     _id: int,
     db: SessionDep
 ):
@@ -192,7 +192,7 @@ def delete_shortcut_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get("/category-app/order/options", response_class=HTMLResponse)
-async def get_order_options_shortcut_app(
+async def get_order_options_category_app(
     db: SessionDep,
     default: Annotated[str, Query()] = ""
 ):
@@ -203,7 +203,7 @@ async def get_order_options_shortcut_app(
         html_content: html = f"""<option value="{value}" {selected}>{value}</option>"""
         return html_content
 
-    total = db.exec(select(func.count()).select_from(CategoryApp)).one()
+    total = db.exec(select(func.count()).select_from(CategoryApp)).one() # pylint: disable=not-callable
     
     if not default:
         total += 1
@@ -212,10 +212,10 @@ async def get_order_options_shortcut_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get("/category-app/theme/options", response_class=HTMLResponse)
-async def get_theme_options_shortcut_app(
+async def get_theme_options_category_app(
     default: Annotated[str, Query()] = ""
 ):
-    THEMES = ["primary", "secondary", "tertiary", "success", "danger", "warning", "info", "light", "dark"]
+    THEMES = ["primary", "secondary", "tertiary", "success", "danger", "warning", "info"]
 
     def card(item: str):
         selected = "selected" if item == default else ""
