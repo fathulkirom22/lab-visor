@@ -87,6 +87,6 @@ async def get_sys_battery() -> HTMLResponse:
     )
 
     html_content: html = (
-        f"""<span><i class="bi bi-{icon}"></i> {battery.percent}%</span>"""
+        f"""<span><i class="bi bi-{icon}"></i> {battery.percent:.2f}%</span>"""
     )
     return HTMLResponse(content=html_content, status_code=200)
