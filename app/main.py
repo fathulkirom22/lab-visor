@@ -9,9 +9,7 @@ from .startup import lifespan
 
 app = FastAPI(lifespan=lifespan)
 
-origins = [
-    "*"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,6 +33,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.include_router(api_router)
 app.include_router(home.router)
 app.include_router(sys.router)
+
 
 @app.exception_handler(404)
 async def custom_404_handler(request, __):

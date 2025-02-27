@@ -1,0 +1,5 @@
+[MESSAGES CONTROL]
+disable=C0114  # Menonaktifkan peringatan missing-module-docstring
+
+[FORMAT]
+max-line-length=88

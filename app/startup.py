@@ -8,6 +8,7 @@ import psutil
 from alembic import command
 from alembic.config import Config
 
+
 def run_migrations():
     try:
         alembic_cfg = Config("alembic.prod.ini")
@@ -15,10 +16,11 @@ def run_migrations():
     except Exception as e:
         print("Error migration", e)
 
+
 def track_resource_usage():
     with Session(engine) as session:
         # Save new data
-        cpu_percent = psutil.cpu_percent(interval=1) 
+        cpu_percent = psutil.cpu_percent(interval=1)
         memory_percent = psutil.virtual_memory().percent
         data = SysDataTracker(cpu=cpu_percent, memory=memory_percent)
         session.add(data)
@@ -32,18 +34,27 @@ def track_resource_usage():
         row = session.exec(select(func.count()).select_from(SysDataTracker)).one()
         if row > limit:
             count_delete = row - limit
-            query_delete = text(f"DELETE FROM {table_name} ORDER BY {timestamp_column} ASC LIMIT {count_delete}")
+            query_delete = text(
+                f"DELETE FROM {table_name} ORDER BY {timestamp_column} ASC LIMIT {count_delete}"
+            )
             session.exec(query_delete)
             session.commit()
 
+
 @asynccontextmanager
-async def lifespan(app:FastAPI):
+async def lifespan(app: FastAPI):
     create_db_and_tables()
 
     run_migrations()
-    
+
     scheduler = BackgroundScheduler()
-    scheduler.add_job(track_resource_usage,"interval", seconds=900, misfire_grace_time=5, coalesce=True)
+    scheduler.add_job(
+        track_resource_usage,
+        "interval",
+        seconds=900,
+        misfire_grace_time=5,
+        coalesce=True,
+    )
     scheduler.start()
     yield
     scheduler.shutdown()

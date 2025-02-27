@@ -19,22 +19,26 @@ if DATABASE_URL == DEFAULT_DB_URL:
     connect_args = {"check_same_thread": False}
     db_path = os.path.join(os.path.dirname(__file__), "data", "db.sqlite")
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
-    conn = sqlite3.connect(db_path) 
+    conn = sqlite3.connect(db_path)
     conn.close()
 
 # Koneksi ke database
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
 
+
 def create_db_and_tables():
     """create db and table from model"""
     SQLModel.metadata.create_all(engine)
+
 
 def get_session():
     """get db session"""
     with Session(engine) as session:
         yield session
 
+
 SessionDep = Annotated[Session, Depends(get_session)]
+
 
 def test_connection():
     """test db connection"""

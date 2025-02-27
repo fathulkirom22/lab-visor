@@ -8,10 +8,12 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.get("/error")
 async def get_error():
     result = 10 / 0
     return {"items": result}
+
 
 @router.get("/health-check", response_model=BaseResponse)
 def get_health_check() -> BaseResponse:

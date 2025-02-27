@@ -1,4 +1,13 @@
 {
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.enable": "true",
+            "source.fixAll.pylint": "true",
+        },
+        "editor.defaultFormatter": "ms-python.black-formatter",
+    },
+    "pylint.args": "--disable=C0114 --max-line-length=88",
     "files.associations": {
         "*.jinja": "jinja-html"
     }
