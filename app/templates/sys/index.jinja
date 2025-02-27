@@ -10,20 +10,21 @@
 
         <div class="pb-4">
             <div class="row mb-5">
-                <div class="col-md-6 mb-5 mb-md-0">
+                <div class="col-md-9 mb-5 mb-md-0">
                     <div id="systemInfo">
                         <h4>
                             <i class="bi bi-info-circle"></i>
                             System Info
                         </h4>
                         {{text.base('Uptime', '/api/sys/uptime', 'text', 15)}}
-                        {{text.base('Operating System', '/api/docker/info', 'OperatingSystem')}}
-                        {{text.base('Architecture', '/api/docker/info', 'Architecture')}}
-                        {{text.base('CPU Cores', '/api/docker/info', 'NCPU')}}
-                        {{text.base('RAM', '/api/docker/info', 'MemTotal')}}
+                        {{text.base('Operating System', '/api/sys/info', 'os')}}
+                        {{text.base('Architecture', '/api/sys/info', 'architecture')}}
+                        {{text.base('CPU Cores', '/api/sys/info', 'ncpu')}}
+                        {{text.base('RAM', '/api/sys/memory-usage', 'total')}}
+                        {{text.baseHTMX('sys-battery-info', 'Battery', '/sys/battery', True)}}
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div id="diskInfo">
                         <h4>
                             <i class="bi bi-hdd"></i>

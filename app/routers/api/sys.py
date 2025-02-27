@@ -2,6 +2,7 @@ from typing import Literal, Annotated
 from datetime import datetime
 import docker
 import psutil
+import os
 
 from fastapi import HTTPException, Query, APIRouter
 from fastapi.encoders import jsonable_encoder
@@ -10,6 +11,7 @@ from sqlmodel import select, func
 from app.models import SysDataTracker
 from app.database import SessionDep
 from app.responses import ErrorResponse, SysDataTrackerResponse, BaseResponse
+from app.utils import convert_bytes
 
 docker_client = docker.DockerClient(base_url="unix://var/run/docker.sock")
 
@@ -101,10 +103,24 @@ def get_sys_cpu_usage() -> BaseResponse:
 def get_sys_memory_usage() -> BaseResponse:
     response = psutil.virtual_memory()
     data = {
-        "total": response.total,
+        "total": convert_bytes(response.total),
         "available": response.available,
         "used": response.used,
         "percent_used": response.percent,
         "datetime": datetime.now().isoformat(),
+    }
+    return BaseResponse(data=data)
+
+
+@router.get("/info", response_model=BaseResponse)
+def get_sys_info() -> BaseResponse:
+    _os = os.uname()
+    _ncpu = os.cpu_count()
+    data = {
+        "os": f"{_os.sysname} - {_os.release}",
+        "architecture": _os.machine,
+        "nodename": _os.nodename,
+        "version": _os.version,
+        "ncpu": _ncpu,
     }
     return BaseResponse(data=data)

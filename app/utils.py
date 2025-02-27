@@ -46,3 +46,31 @@ async def minify_html(request):
 def camel_to_snake(name):
     s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+
+
+def convert_bytes(size_in_bytes, unit="auto"):
+    """
+    Mengonversi ukuran dalam byte ke satuan lain (B, KB, MB, GB, TB, PB).
+
+    :param size_in_bytes: Jumlah byte (int)
+    :param unit: Satuan tujuan ("B", "KB", "MB", "GB", "TB", "PB", atau "auto" untuk otomatis).
+    :return: Nilai dalam satuan yang dipilih (float) dengan 2 desimal.
+    """
+    units = ["B", "KB", "MB", "GB", "TB", "PB"]
+    factor = 1024  # 1 KB = 1024 B
+
+    if unit == "auto":
+        index = 0
+        while size_in_bytes >= factor and index < len(units) - 1:
+            size_in_bytes /= factor
+            index += 1
+        return f"{size_in_bytes:.2f} {units[index]}"
+
+    if unit in units:
+        index = units.index(unit)
+        converted_size = size_in_bytes / (factor**index)
+        return f"{converted_size:.2f} {unit}"
+
+    raise ValueError(
+        "Unit tidak valid. Gunakan 'B', 'KB', 'MB', 'GB', 'TB', atau 'PB'."
+    )

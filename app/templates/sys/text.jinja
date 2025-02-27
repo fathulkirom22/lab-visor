@@ -28,3 +28,17 @@
 
     </script>
 {% endmacro %}
+
+{% macro baseHTMX(id, label, api_url, interval = False) %}
+    {% set trigger = "load" if not interval else "load, every 15s" %}
+    <p>
+        <strong>{{label}}: </strong>
+        <span
+            id="{{id}}"
+            hx-get="{{api_url}}"
+            hx-trigger="{{trigger}}"
+            hx-target="#{{id}}" 
+            hx-swap="innerHTML"
+        >Memuat...</span>
+    </p>
+{% endmacro %}
