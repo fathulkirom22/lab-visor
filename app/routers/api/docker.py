@@ -1,17 +1,20 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.responses import BaseResponse
 import docker
 
-docker_client = docker.DockerClient(base_url="unix://var/run/docker.sock")
+router = APIRouter(prefix="/docker", tags=["docker"])
 
-router = APIRouter(
-    prefix="/docker",
-    tags=["docker"],
-    responses={404: {"description": "Not found"}},
-)
+
+def get_docker_client():
+    try:
+        client = docker.from_env()
+        client.ping()
+        return client
+    except Exception:
+        raise HTTPException(status_code=503, detail="Docker service unavailable")
 
 
 @router.get("/info", response_model=BaseResponse)
 def get_docker_info() -> BaseResponse:
-    data = docker_client.info()
-    return BaseResponse(data=data)
+    client = get_docker_client()
+    return BaseResponse(data=client.info())

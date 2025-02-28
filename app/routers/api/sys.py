@@ -1,6 +1,5 @@
 from typing import Literal, Annotated
 from datetime import datetime
-import docker
 import psutil
 import os
 
@@ -12,8 +11,6 @@ from app.models import SysDataTracker
 from app.database import SessionDep
 from app.responses import ErrorResponse, SysDataTrackerResponse, BaseResponse
 from app.utils import convert_bytes
-
-docker_client = docker.DockerClient(base_url="unix://var/run/docker.sock")
 
 router = APIRouter(
     prefix="/sys",

@@ -1,0 +1,46 @@
+[project]
+name = "app"
+version = "0.1.0"
+description = "Home Lab Landingpage & Resource Monitoring"
+authors = [
+    {name = "fathulkirom22",email = "hello.kirom@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi (>=0.115.9,<0.116.0)",
+    "uvicorn (>=0.34.0,<0.35.0)",
+    "sqlmodel (>=0.0.22,<0.0.23)",
+    "sqlalchemy (>=2.0.38,<3.0.0)",
+    "pymysql (>=1.1.1,<2.0.0)",
+    "requests (>=2.32.3,<3.0.0)",
+    "httpx (>=0.28.1,<0.29.0)",
+    "htmlmin (>=0.1.12,<0.2.0)",
+    "jinja2 (>=3.1.5,<4.0.0)",
+    "python-multipart (>=0.0.20,<0.0.21)",
+    "psutil (>=7.0.0,<8.0.0)",
+    "docker (>=7.1.0,<8.0.0)",
+    "apscheduler (>=3.11.0,<4.0.0)",
+    "alembic (>=1.14.1,<2.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)"
+]
+
+[tool.poetry]
+packages = [{include = "app"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+mypy-extensions = "^1.0.0"
+pathspec = "^0.12.1"
+rich = "^13.9.4"
+rich-toolkit = "^0.13.2"
+fastapi-cli = "^0.0.7"
+shellingham = "^1.5.4"
+
+[tool.poetry.scripts]
+dev = "uvicorn app.main:app --reload"
