@@ -60,12 +60,12 @@
                     datasets: [{
                         data: [used, free],
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)'
+                            'rgba(220, 53, 69, 0.5)',
+                            'rgba(40, 167, 69, 0.5)'
                         ],
                         borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)'
+                            'rgba(220, 53, 69, 1.0)',
+                            'rgba(40, 167, 69, 1.0)'
                         ],
                         borderWidth: 1
                     }]
@@ -100,12 +100,12 @@
         </div>
     </div>
     <div class="row align-items-start mb-5">
-        <div class="col-md-6">
-            <h4><i class="bi bi-net"></i> Network</h4>
+        <div class="col-md-6 mb-5 mb-md-0">
+            <h4><i class="bi bi-reception-4"></i> Network</h4>
             <canvas id="{{ id }}-net" class="w-100" style="max-height: 200px;" height="200">Loading...</canvas>
         </div>
         <div class="col-md-6">
-            <h4><i class="bi bi-io"></i> Disk IO</h4>
+            <h4><i class="bi bi-hdd"></i> Disk IO</h4>
             <canvas id="{{ id }}-io" class="w-100" style="max-height: 200px;" height="200">Loading...</canvas>
         </div>
     </div>
@@ -186,19 +186,30 @@
                         label: "Network Sent",
                         data: [],
                         borderWidth: 1,
+                        borderColor: 'rgba(253, 126, 20, 1.0)',
+                        backgroundColor: 'rgba(253, 126, 20, 0.5)',
                         tension: 0.4
                     },
                     {
                         label: "Network Received",
                         data: [],
                         borderWidth: 1,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(40, 167, 69, 1.0)',
+                        backgroundColor: 'rgba(40, 167, 69, 0.5)',
                         tension: 0.4
                     },
                 ]
             },
-            options
+            options: {
+                ...options,
+                scales: {
+                    ...options.scales,
+                    y: {
+                        ...options.scales.y,
+                        suggestedMax: false
+                    }
+                }
+            }
         });
 
         const _ctxio = document.getElementById('{{ id }}-io');
@@ -212,19 +223,30 @@
                         label: "Write",
                         data: [],
                         borderWidth: 1,
+                        borderColor: 'rgba(220, 53, 69, 1.0)',
+                        backgroundColor: 'rgba(220, 53, 69, 0.5)',
                         tension: 0.4
                     },
                     {
                         label: "Read",
                         data: [],
                         borderWidth: 1,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(40, 167, 69, 1.0)',
+                        backgroundColor: 'rgba(40, 167, 69, 0.5)',
                         tension: 0.4
                     },
                 ]
             },
-            options
+            options: {
+                ...options,
+                scales: {
+                    ...options.scales,
+                    y: {
+                        ...options.scales.y,
+                        suggestedMax: false
+                    }
+                }
+            }
         });
 
         document.body.addEventListener("htmx:sseMessage", function(event) {

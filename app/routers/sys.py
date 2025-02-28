@@ -5,7 +5,7 @@ from datetime import datetime
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import StreamingResponse, HTMLResponse
-from app.utils import minify_html, convert_bytes, convert_bytes_to_mb
+from app.utils import minify_html, convert_bytes, convert_bytes_without_unit
 
 html = str
 
@@ -54,13 +54,13 @@ async def sys_event_stream():
 
         # get network data
         net = psutil.net_io_counters()
-        net_mb_sent.append(convert_bytes_to_mb(net.bytes_sent))
-        net_mb_recv.append(convert_bytes_to_mb(net.bytes_recv))
+        net_mb_sent.append(convert_bytes_without_unit(net.bytes_sent))
+        net_mb_recv.append(convert_bytes_without_unit(net.bytes_recv))
 
         # get disk data
         disk = psutil.disk_io_counters()
-        disk_write_mb.append(convert_bytes_to_mb(disk.write_bytes))
-        disk_read_mb.append(convert_bytes_to_mb(disk.read_bytes))
+        disk_write_mb.append(convert_bytes_without_unit(disk.write_bytes))
+        disk_read_mb.append(convert_bytes_without_unit(disk.read_bytes))
 
         # get datetime
         labels.append(datetime.now().isoformat())

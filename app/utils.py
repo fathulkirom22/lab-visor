@@ -76,6 +76,12 @@ def convert_bytes(size_in_bytes, unit="auto"):
     )
 
 
-def convert_bytes_to_mb(bytes):
-    mb = bytes / (1024 * 1024)
-    return mb
+def convert_bytes_without_unit(bytes):
+    units = ["B", "KB", "MB", "GB", "TB", "PB"]
+    factor = 1024  # 1 KB = 1024 B
+
+    index = 0
+    while bytes >= factor and index < len(units) - 1:
+        bytes /= factor
+        index += 1
+    return bytes
