@@ -99,6 +99,16 @@
             <canvas id="{{ id }}-memory" class="w-100" style="max-height: 200px;" height="200">Loading...</canvas>
         </div>
     </div>
+    <div class="row align-items-start mb-5">
+        <div class="col-md-6">
+            <h4><i class="bi bi-net"></i> Network</h4>
+            <canvas id="{{ id }}-net" class="w-100" style="max-height: 200px;" height="200">Loading...</canvas>
+        </div>
+        <div class="col-md-6">
+            <h4><i class="bi bi-io"></i> Disk IO</h4>
+            <canvas id="{{ id }}-io" class="w-100" style="max-height: 200px;" height="200">Loading...</canvas>
+        </div>
+    </div>
 
     <div id="message-container"
         hx-ext="sse"
@@ -165,21 +175,83 @@
             options
         });
         
-        console.log("🚀 ~ options:", options)
+        const _ctxnet = document.getElementById('{{ id }}-net');
+        _ctxnet.height = 200;
+        const chart_net = new Chart(_ctxnet, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Network Sent",
+                        data: [],
+                        borderWidth: 1,
+                        tension: 0.4
+                    },
+                    {
+                        label: "Network Received",
+                        data: [],
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.4
+                    },
+                ]
+            },
+            options
+        });
+
+        const _ctxio = document.getElementById('{{ id }}-io');
+        _ctxio.height = 200;
+        const chart_io = new Chart(_ctxio, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Write",
+                        data: [],
+                        borderWidth: 1,
+                        tension: 0.4
+                    },
+                    {
+                        label: "Read",
+                        data: [],
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.4
+                    },
+                ]
+            },
+            options
+        });
 
         document.body.addEventListener("htmx:sseMessage", function(event) {
             if (event.detail.type === "resource-chart-update") {
                 const data = JSON.parse(event.detail.data);
 
                 // cpu
-                chart_cpu.data.labels = data.cpu.labels;
-                chart_cpu.data.datasets[0].data = data.cpu.values;
+                chart_cpu.data.labels = data.labels;
+                chart_cpu.data.datasets[0].data = data.cpu;
                 chart_cpu.update();
 
                 // memory
-                chart_memory.data.labels = data.memory.labels;
-                chart_memory.data.datasets[0].data = data.memory.values;
+                chart_memory.data.labels = data.labels;
+                chart_memory.data.datasets[0].data = data.memory;
                 chart_memory.update();
+
+                // network
+                chart_net.data.labels = data.labels;
+                chart_net.data.datasets[0].data = data.net.sent;
+                chart_net.data.datasets[1].data = data.net.recv;
+                chart_net.update();
+
+                // disk io
+                chart_io.data.labels = data.labels;
+                chart_io.data.datasets[0].data = data.disk.write
+                chart_io.data.datasets[1].data = data.disk.read
+                chart_io.update()
             }
         });
         

@@ -10,7 +10,7 @@
 
         <div class="pb-4">
             <div class="row mb-5">
-                <div class="col-md-9 mb-5 mb-md-0">
+                <div class="col-md-6 mb-5 mb-md-0">
                     <div id="systemInfo">
                         <h4>
                             <i class="bi bi-info-circle"></i>
@@ -24,13 +24,18 @@
                         {{text.baseHTMX('sys-battery-info', 'Battery', '/sys/battery', True)}}
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <div id="diskInfo">
                         <h4>
                             <i class="bi bi-hdd"></i>
                             Disk
                         </h4>
-                        {{ cart.disk('disk') }}
+                        <div class="d-flex">
+                            <div class="w-50">
+                                <div hx-get="/sys/disk" hx-trigger="load"></div>
+                            </div>
+                            {{ cart.disk('disk') }}
+                        </div>
                     </div>
                 </div>
             </div>

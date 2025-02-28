@@ -74,3 +74,8 @@ def convert_bytes(size_in_bytes, unit="auto"):
     raise ValueError(
         "Unit tidak valid. Gunakan 'B', 'KB', 'MB', 'GB', 'TB', atau 'PB'."
     )
+
+
+def convert_bytes_to_mb(bytes):
+    mb = bytes / (1024 * 1024)
+    return mb

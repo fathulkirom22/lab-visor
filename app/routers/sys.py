@@ -5,7 +5,7 @@ from datetime import datetime
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import StreamingResponse, HTMLResponse
-from app.utils import minify_html
+from app.utils import minify_html, convert_bytes, convert_bytes_to_mb
 
 html = str
 
@@ -18,13 +18,28 @@ templates.env.lstrip_blocks = True
 
 # Fungsi generator untuk streaming data ke client
 async def sys_event_stream():
-    labels = ["" for _ in range(30)]
-    values_cpu = [None for _ in range(30)]
-    values_memory = [None for _ in range(30)]
+    _limit = 30
+
+    labels = ["" for _ in range(_limit)]
+    values_cpu = [None for _ in range(_limit)]
+    values_memory = [None for _ in range(_limit)]
+    net_mb_sent = [None for _ in range(_limit)]
+    net_mb_recv = [None for _ in range(_limit)]
+    disk_write_mb = [None for _ in range(_limit)]
+    disk_read_mb = [None for _ in range(_limit)]
     while True:
         data = {
-            "cpu": {"labels": labels, "values": values_cpu},
-            "memory": {"labels": labels, "values": values_memory},
+            "labels": labels,
+            "cpu": values_cpu,
+            "memory": values_memory,
+            "net": {
+                "sent": net_mb_sent,
+                "recv": net_mb_recv,
+            },
+            "disk": {
+                "write": disk_write_mb,
+                "read": disk_read_mb,
+            },
         }
 
         yield f"event: resource-chart-update\ndata: {json.dumps(data)}\n\n"  # send data to client
@@ -37,6 +52,16 @@ async def sys_event_stream():
         memory_percent = psutil.virtual_memory().percent
         values_memory.append(memory_percent)
 
+        # get network data
+        net = psutil.net_io_counters()
+        net_mb_sent.append(convert_bytes_to_mb(net.bytes_sent))
+        net_mb_recv.append(convert_bytes_to_mb(net.bytes_recv))
+
+        # get disk data
+        disk = psutil.disk_io_counters()
+        disk_write_mb.append(convert_bytes_to_mb(disk.write_bytes))
+        disk_read_mb.append(convert_bytes_to_mb(disk.read_bytes))
+
         # get datetime
         labels.append(datetime.now().isoformat())
 
@@ -45,6 +70,10 @@ async def sys_event_stream():
             values_cpu.pop(0)
             values_memory.pop(0)
             labels.pop(0)
+            net_mb_sent.pop(0)
+            net_mb_recv.pop(0)
+            disk_write_mb.pop(0)
+            disk_read_mb.pop(0)
 
         await asyncio.sleep(3)  # send data every 3 seconds
 
@@ -60,6 +89,23 @@ async def view_root(request: Request):
     res = templates.TemplateResponse(
         _tamplate, {"request": request, "title": "System Info"}
     )
+    minify = await minify_html(res)
+    return minify
+
+
+@router.get("/disk")
+async def get_sys_disk(request: Request):
+    _tamplate = "sys/component/disk-info.jinja"
+
+    response = psutil.disk_usage("/")
+    data = {
+        "total": convert_bytes(response.total),
+        "used": convert_bytes(response.used),
+        "free": convert_bytes(response.free),
+        "percent_used": response.percent,
+    }
+
+    res = templates.TemplateResponse(_tamplate, {"request": request, "data": data})
     minify = await minify_html(res)
     return minify
 
