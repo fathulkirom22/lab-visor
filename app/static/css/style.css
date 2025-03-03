@@ -1,3 +1,20 @@
 p {
     color: rgb(107, 106, 106) !important;
 }
+
+.shortcut-card {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.shortcut-card .shortcut-bg {
+    filter: opacity(10%);
+    pointer-events: none;
+    position: absolute;
+    bottom: -2rem;
+    right: .5rem;
+    font-size: 5rem;
+    z-index: 1;
+}

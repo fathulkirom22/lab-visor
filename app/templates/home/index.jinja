@@ -7,11 +7,13 @@
 {% block content %}
     <div class="container">
 
-        <div id="homeListCategoryApp" hx-get="/category-app/list" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)"></div>
+        <div id="homeListCategoryApp" hx-get="/category-app/list?page_edit={{page_edit}}" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)"></div>
 
-        <div class="border-top d-flex justify-content-center pt-5">
-            {{ modal.form_category_app() }}
-        </div>
+        {% if page_edit %}
+            <div class="d-flex justify-content-center border-top pt-5">
+                {{ modal.form_category_app(page_edit=page_edit) }}
+            </div>
+        {% endif %}
 
     </div>
 

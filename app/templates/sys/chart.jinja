@@ -12,12 +12,12 @@
                     labels: resource.data.map(item => DateTime.fromISO(item.created_at).setZone(tz).toFormat('HH:mm')),
                     datasets: [
                         {
-                            label: "CPU Usage",
+                            label: "CPU",
                             data: resource.data.map(item => item.cpu),
                             borderWidth: 1
                         },
                         {
-                            label: "Memory Usage",
+                            label: "Memory",
                             data: resource.data.map(item => item.memory),
                             borderWidth: 1
                         }
@@ -46,7 +46,7 @@
 
 {% macro disk(id) %}
     <div class="w-100">
-        <canvas id="{{ id }}" class="w-100" style="height: 200px;" height="200">Loading...</canvas>
+        <canvas id="{{ id }}" class="w-100">Loading...</canvas>
     </div>
 
     <script type="module">
@@ -166,7 +166,7 @@
                         data: [],
                         borderWidth: 1,
                         borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
                         fill: true,
                         tension: 0.4
                     },
@@ -183,7 +183,7 @@
                 labels: [],
                 datasets: [
                     {
-                        label: "Network Sent",
+                        label: "Sent",
                         data: [],
                         borderWidth: 1,
                         borderColor: 'rgba(253, 126, 20, 1.0)',
@@ -191,7 +191,7 @@
                         tension: 0.4
                     },
                     {
-                        label: "Network Received",
+                        label: "Received",
                         data: [],
                         borderWidth: 1,
                         borderColor: 'rgba(40, 167, 69, 1.0)',

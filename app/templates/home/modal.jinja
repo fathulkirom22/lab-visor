@@ -107,15 +107,18 @@
     </div>
 {% endmacro %}
 
-{% macro form_category_app(edit = false, item = None) %}
-    {% if edit %}
-        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formCategoryApp-{{item.id}}" data-bs-whatever="@getbootstrap">
-            <i class="bi bi-pencil"></i>
-        </button>
-    {% else %}
-        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#formCategoryApp-{{item.id}}" data-bs-whatever="@getbootstrap">
-            <span class="bi bi-plus"></span> Add Category
-        </button>
+{% macro form_category_app(edit = false, item = None, page_edit = false) %}
+
+    {% if page_edit %}
+        {% if edit %}
+            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formCategoryApp-{{item.id}}" data-bs-whatever="@getbootstrap">
+                <i class="bi bi-pencil"></i>
+            </button>
+        {% else %}
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#formCategoryApp-{{item.id}}" data-bs-whatever="@getbootstrap">
+                <span class="bi bi-plus"></span> Add Category
+            </button>
+        {% endif %}
     {% endif %}
 
     <div class="modal fade" id="formCategoryApp-{{item.id}}" tabindex="-1" aria-labelledby="formCategoryAppLabel" aria-hidden="true">

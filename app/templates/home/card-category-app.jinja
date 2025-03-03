@@ -5,18 +5,20 @@
         <i class="bi bi-{{item.icon}}"></i> 
         {{ item.name }}
     </h5>
-    <div class="d-flex">
-        <span>
-            {{ modal.form_shortcut_app(false, none, item.id) }}
-        </span>
-        <span>
-            {{ modal.form_category_app(true, item) }}
-        </span>
-    </div>
+    {% if page_edit %}
+        <div class="d-flex">
+            <span>
+                {{ modal.form_shortcut_app(false, none, item.id) }}
+            </span>
+            <span>
+                {{ modal.form_category_app(true, item, page_edit = page_edit) }}
+            </span>
+        </div>
+    {% endif %}
 </div>
 <div class="mb-4 pb-4">
     {% if item.id %}
-        <div id="homeListShortcutApp-{{item.id}}" hx-get="/shortcut-app/list/{{item.id}}" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)"></div>
+        <div id="homeListShortcutApp-{{item.id}}" hx-get="/shortcut-app/list/{{item.id}}?page_edit={{page_edit}}" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)"></div>
     {% else %}
         <div id="homeListShortcutApp-all" hx-get="/shortcut-app/list" hx-trigger="load, refresh from:body"></div>
     {% endif %}

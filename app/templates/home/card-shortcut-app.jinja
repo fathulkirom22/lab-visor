@@ -1,7 +1,8 @@
 {% import "home/modal.jinja" as modal %}
 
 <div class="col-sm-3 p-2">
-    <div class="card border-{{item.category_app.theme}} text-{{item.category_app.theme}} color-{{item.category_app.theme}} h-100">
+    <div class="shortcut-card card border-{{item.category_app.theme}} text-{{item.category_app.theme}} color-{{item.category_app.theme}} h-100">
+        <i class="shortcut-bg bi bi-{{item.icon}}"></i>
         <div class="card-body h-100">
             <div class="d-flex column flex-column justify-content-between h-100">
                 <div class="d-flex justify-content-between">
@@ -9,9 +10,11 @@
                         <h5 class="card-title"><i class="bi bi-{{item.icon}}"></i> {{item.name}}</h5>
                         <p class="card-text text-{{item.category_app.theme}}">{{item.description}}</p>
                     </div>
-                    <div class="d-flex align-items-start">
-                        {{ modal.form_shortcut_app(true, item, item.category_app_id) }}
-                    </div>
+                    {% if page_edit %}
+                        <div class="d-flex align-items-start">
+                            {{ modal.form_shortcut_app(true, item, item.category_app_id) }}
+                        </div>
+                    {% endif %}
                 </div>
                 <div>
                     <a href="{{item.link}}" target="_blank" class="btn btn-{{item.category_app.theme}}">Launch App</a>

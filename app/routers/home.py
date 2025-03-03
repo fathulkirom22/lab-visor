@@ -18,10 +18,15 @@ templates.env.lstrip_blocks = True
 
 
 @router.get("/")
-async def view_root(request: Request):
+async def view_root(
+    request: Request,
+    page_edit: Annotated[int, Query(ge=0, le=1)] = 0,
+) -> HTMLResponse:
     _tamplate = "home/index.jinja"
+
     res = templates.TemplateResponse(
-        _tamplate, {"request": request, "title": "Home Dashboard"}
+        _tamplate,
+        {"request": request, "title": "Home Dashboard", "page_edit": page_edit},
     )
     minify = await minify_html(res)
     return minify
@@ -72,10 +77,16 @@ async def get_list_shortcut_app(db: SessionDep):
 
 
 @router.get("/shortcut-app/list/{_id_category}", response_class=HTMLResponse)
-async def get_list_shortcut_app_by_id(db: SessionDep, _id_category: int):
+async def get_list_shortcut_app_by_id(
+    db: SessionDep,
+    _id_category: int,
+    page_edit: Annotated[int, Query(ge=0, le=1)] = 0,
+):
     def card(item: ShortcutApp):
         _tamplate = "home/card-shortcut-app.jinja"
-        res = templates.get_template(_tamplate).render({"item": item})
+        res = templates.get_template(_tamplate).render(
+            {"item": item, "page_edit": page_edit}
+        )
         return res
 
     data = db.exec(
@@ -135,10 +146,16 @@ async def post_category_app(db: SessionDep, item: Annotated[CategoryAppCreate, F
 
 
 @router.get("/category-app/list", response_class=HTMLResponse)
-async def get_list_category_app(db: SessionDep):
+async def get_list_category_app(
+    db: SessionDep,
+    page_edit: Annotated[int, Query(ge=0, le=1)] = 0,
+) -> HTMLResponse:
+
     def card(item: CategoryApp):
         _tamplate = "home/card-category-app.jinja"
-        res = templates.get_template(_tamplate).render({"item": item})
+        res = templates.get_template(_tamplate).render(
+            {"item": item, "page_edit": page_edit}
+        )
         return res
 
     data = db.exec(select(CategoryApp).order_by(CategoryApp.order)).all()
