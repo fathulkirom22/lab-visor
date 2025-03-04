@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="container">
-        <div id="containerList" hx-get="/container/list" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)">
+        <div id="containerList" hx-get="/container/list" hx-trigger="load, refresh from:body, every 15s" hx-on::after-settle="htmx.process(this)">
             <div class="text-center">Docker service unavailable</div>
         </div>
     </div>

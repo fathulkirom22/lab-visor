@@ -1,25 +1,30 @@
 {% import "home/modal.jinja" as modal %}
 
-<div class="d-flex justify-content-between align-items-center border-bottom mb-4 pb-2 border-{{item.theme}} text-{{item.theme}}">
-    <h5>
-        <i class="bi bi-{{item.icon}}"></i> 
-        {{ item.name }}
-    </h5>
-    {% if page_edit %}
-        <div class="d-flex">
-            <span>
-                {{ modal.form_shortcut_app(false, none, item.id) }}
-            </span>
-            <span>
-                {{ modal.form_category_app(true, item, page_edit = page_edit) }}
-            </span>
+<div class="accordion border-none" id="accordionCategoryAppPanels">
+    <div class="accordion-item">
+        <div class="accordion-header d-flex justify-content-between align-items-center border-bottom border-{{item.theme}} text-{{item.theme}}">
+            <button type="button" class="btn m-0 px-0 accordion-button text-{{item.theme}}" data-bs-toggle="collapse" href="#collapse-{{item.id}}" role="button" aria-expanded="true" aria-controls="collapse-{{item.id}}">
+                <h5>
+                    <i class="bi bi-{{item.icon}}"></i> {{ item.name }}
+                </h5>
+                {% if page_edit %}
+                    <span>
+                        {{ modal.form_shortcut_app(false, none, item.id) }}
+                    </span>
+                    <span>
+                        {{ modal.form_category_app(true, item, page_edit = page_edit) }}
+                    </span>
+                {% endif %}
+            </button>
         </div>
-    {% endif %}
-</div>
-<div class="mb-4 pb-4">
-    {% if item.id %}
-        <div id="homeListShortcutApp-{{item.id}}" hx-get="/shortcut-app/list/{{item.id}}?page_edit={{page_edit}}" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)"></div>
-    {% else %}
-        <div id="homeListShortcutApp-all" hx-get="/shortcut-app/list" hx-trigger="load, refresh from:body"></div>
-    {% endif %}
+        <div class="accordion-collapse collapse show" id="collapse-{{item.id}}">
+            <div class="accordion-body px-1">
+                {% if item.id %}
+                    <div id="homeListShortcutApp-{{item.id}}" hx-get="/shortcut-app/list/{{item.id}}?page_edit={{page_edit}}" hx-trigger="load, refresh from:body" hx-on::after-settle="htmx.process(this)"></div>
+                {% else %}
+                    <div id="homeListShortcutApp-all" hx-get="/shortcut-app/list" hx-trigger="load, refresh from:body"></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>

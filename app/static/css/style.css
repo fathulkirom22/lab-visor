@@ -21,6 +21,18 @@ p {
     color: rgb(107, 106, 106) !important;
 }
 
+#accordionCategoryAppPanels .accordion-item {
+    border: 0 !important;
+}
+
+#accordionCategoryAppPanels .accordion-button:not(.collapsed) {
+    background-color: transparent !important;
+}
+
+#accordionCategoryAppPanels .accordion-button:focus {
+    box-shadow: none !important;
+}
+
 .shortcut-card {
     display: inline-block;
     overflow: hidden;

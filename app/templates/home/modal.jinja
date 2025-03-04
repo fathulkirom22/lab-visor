@@ -9,7 +9,7 @@
         </button>
     {% endif %}
 
-    <div class="modal fade" id="formShortcutApp-{{category_app_id}}-{{item.id}}" tabindex="-1" aria-labelledby="formShortcutAppLabel" aria-hidden="true">
+    <div class="modal fade text-secondary" id="formShortcutApp-{{category_app_id}}-{{item.id}}" tabindex="-1" aria-labelledby="formShortcutAppLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -44,15 +44,15 @@
 
                         <div class="mb-3">
                             <label for="name-app" class="col-form-label">Name</label>
-                            <input type="text" class="form-control" id="name-app" name="name" value="{{item.name}}" placeholder="App name">
+                            <input type="text" class="form-control" id="name-app" name="name" value="{{item.name}}" placeholder="app name">
                         </div>
                         <div class="mb-3">
                             <label for="link-app" class="col-form-label">Link</label>
-                            <input type="text" class="form-control" id="link-app" name="link" value="{{item.link}}" placeholder="Full path link">
+                            <input type="text" class="form-control" id="link-app" name="link" value="{{item.link}}" placeholder="full path link">
                         </div>
                         <div class="mb-3">
-                            <label for="icon-app" class="col-form-label">Icon <a href="https://icons.getbootstrap.com/"><i class="bi bi-info-circle"></i></a></label>
-                            <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}" placeholder="Ex: x-circle">
+                            <label for="icon-app" class="col-form-label">Icon <a href="https://icons.getbootstrap.com/" target="_blank"><i class="bi bi-info-circle"></i></a></label>
+                            <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}" placeholder="ex: x-circle">
                         </div>
                         <div class="mb-3">
                             <label for="category-app" class="col-form-label">Category</label>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="description-text" class="col-form-label">Description</label>
-                            <textarea class="form-control" id="description-text" name="description" placeholder="Input description">{{item.description}}</textarea>
+                            <textarea class="form-control" id="description-text" name="description" placeholder="input description">{{item.description}}</textarea>
                         </div>
                         <div class="d-flex justify-content-between">
                             <div>
@@ -121,7 +121,7 @@
         {% endif %}
     {% endif %}
 
-    <div class="modal fade" id="formCategoryApp-{{item.id}}" tabindex="-1" aria-labelledby="formCategoryAppLabel" aria-hidden="true">
+    <div class="modal fade text-secondary" id="formCategoryApp-{{item.id}}" tabindex="-1" aria-labelledby="formCategoryAppLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -155,11 +155,11 @@
 
                         <div class="mb-3">
                             <label for="name-app" class="col-form-label">Name</label>
-                            <input type="text" class="form-control" id="name-app" name="name" value="{{item.name}}" placeholder="Category Name">
+                            <input type="text" class="form-control" id="name-app" name="name" value="{{item.name}}" placeholder="category name">
                         </div>
                         <div class="mb-3">
-                            <label for="icon-app" class="col-form-label">Icon <a href="https://icons.getbootstrap.com/"><i class="bi bi-info-circle"></i></a></label>
-                            <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}" placeholder="Ex: info-circle">
+                            <label for="icon-app" class="col-form-label">Icon <a href="https://icons.getbootstrap.com/" target="_blank"><i class="bi bi-info-circle"></i></a></label>
+                            <input type="text" class="form-control" id="icon-app" name="icon" value="{{item.icon}}" placeholder="ex: info-circle">
                         </div>
                         <div class="mb-3">
                             <label for="theme-category-{{item.id}}" class="col-form-label">Theme</label>
