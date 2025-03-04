@@ -2,7 +2,7 @@
 
 from typing import Optional, Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl, ValidationError, field_validator
 
 
 class ShortcutAppCreate(BaseModel):
@@ -14,6 +14,14 @@ class ShortcutAppCreate(BaseModel):
     icon: Annotated[Optional[str], Field(...)] = None
     description: Annotated[Optional[str], Field(...)] = None
     category_app_id: Annotated[Optional[int], Field(...)] = None
+
+    @field_validator("link")
+    @classmethod
+    def validate_link(cls, value: str) -> str:
+        try:
+            return str(HttpUrl(value))
+        except ValidationError:
+            raise ValueError("Invalid URL format")
 
 
 class CategoryAppCreate(BaseModel):
