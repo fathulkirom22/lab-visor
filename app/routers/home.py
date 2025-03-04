@@ -1,5 +1,6 @@
-from typing import Annotated
-from fastapi import APIRouter, Request, HTTPException, Query, Form
+from typing import Annotated, Optional
+from pydantic import ValidationError
+from fastapi import APIRouter, Request, HTTPException, Query, Form, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from sqlmodel import select, update, func
@@ -33,9 +34,35 @@ async def view_root(
     return minify
 
 
+def validation_post_shortcut_app(
+    name: Annotated[str, Form(...)],
+    link: Annotated[str, Form(...)],
+    id: Annotated[Optional[int], Form(...)] = None,
+    icon: Annotated[Optional[str], Form(...)] = None,
+    description: Annotated[Optional[str], Form(...)] = None,
+    category_app_id: Annotated[Optional[int], Form(...)] = None,
+) -> ShortcutAppCreate:
+    try:
+        res = ShortcutAppCreate(
+            id=id,
+            name=name,
+            link=link,
+            icon=icon,
+            description=description,
+            category_app_id=category_app_id,
+        )
+    except ValidationError as e:
+        error = e.errors()[0]
+        raise HTTPException(
+            status_code=400, detail=f"{str(error['loc'][0]).title()} {error['msg']}"
+        )
+    return res
+
+
 @router.post("/shortcut-app/save", response_model=ToastResponse)
 async def post_shortcut_app(
-    db: SessionDep, item: Annotated[ShortcutAppCreate, Form()]
+    db: SessionDep,
+    item: Annotated[ShortcutAppCreate, Depends(validation_post_shortcut_app)],
 ) -> ToastResponse:
     _item = ShortcutApp(**item.model_dump())
     _item.icon = _item.icon.lower()
@@ -114,9 +141,27 @@ def delete_shortcut_app(_id: int, db: SessionDep) -> ToastResponse:
     )
 
 
+def validation_post_category_app(
+    name: Annotated[str, Form(...)],
+    theme: Annotated[str, Form(...)],
+    order: Annotated[int, Form(...)],
+    icon: Annotated[Optional[str], Form(...)] = None,
+    id: Annotated[Optional[int], Form(...)] = None,
+) -> CategoryAppCreate:
+    try:
+        res = CategoryAppCreate(id=id, name=name, icon=icon, theme=theme, order=order)
+    except ValidationError as e:
+        error = e.errors()[0]
+        raise HTTPException(
+            status_code=400, detail=f"{str(error['loc'][0]).title()} {error['msg']}"
+        )
+    return res
+
+
 @router.post("/category-app/save", response_model=ToastResponse)
 async def post_category_app(
-    db: SessionDep, item: Annotated[CategoryAppCreate, Form()]
+    db: SessionDep,
+    item: Annotated[CategoryAppCreate, Depends(validation_post_category_app)],
 ) -> ToastResponse:
     _item = CategoryApp(**item.model_dump())
     _item.icon = _item.icon.lower()
