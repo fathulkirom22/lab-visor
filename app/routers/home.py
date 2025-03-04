@@ -94,9 +94,8 @@ async def get_list_shortcut_app(db: SessionDep):
         .join(CategoryApp, ShortcutApp.category_app_id == CategoryApp.id)
     ).all()
     if len(data) <= 0:
-        html_content: html = (
-            """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
-        )
+        _tamplate = "empty.jinja"
+        html_content = templates.get_template(_tamplate).render()
         return HTMLResponse(content=html_content, status_code=200)
 
     html_content: html = f"""<div class="row">{''.join(map(card, data))}</div>"""
@@ -120,9 +119,8 @@ async def get_list_shortcut_app_by_id(
         select(ShortcutApp).where(ShortcutApp.category_app_id == _id_category)
     ).all()
     if len(data) <= 0:
-        html_content: html = (
-            """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
-        )
+        _tamplate = "empty.jinja"
+        html_content = templates.get_template(_tamplate).render()
         return HTMLResponse(content=html_content, status_code=200)
 
     html_content: html = f"""<div class="row">{''.join(map(card, data))}</div>"""
@@ -203,9 +201,8 @@ async def get_list_category_app(
 
     data = db.exec(select(CategoryApp).order_by(CategoryApp.order)).all()
     if len(data) <= 0:
-        html_content: html = (
-            """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
-        )
+        _tamplate = "empty.jinja"
+        html_content = templates.get_template(_tamplate).render()
         return HTMLResponse(content=html_content, status_code=200)
 
     html_content: html = f"""<div>{''.join(map(card, data))}</div>"""
@@ -226,9 +223,8 @@ async def get_options_category_app(
 
     data = db.exec(select(CategoryApp)).all()
     if len(data) <= 0:
-        html_content: html = (
-            """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
-        )
+        _tamplate = "empty.jinja"
+        html_content = templates.get_template(_tamplate).render()
         return HTMLResponse(content=html_content, status_code=200)
 
     html_content: html = "".join(map(card, data))

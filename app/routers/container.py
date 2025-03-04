@@ -53,9 +53,8 @@ async def get_list_container(
     containers = client.containers.list(all=True)
 
     if len(containers) <= 0:
-        html_content: html = (
-            """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
-        )
+        _tamplate = "empty.jinja"
+        html_content = templates.get_template(_tamplate).render()
         return HTMLResponse(content=html_content, status_code=200)
 
     html_content: html = f"""<div class="row">{''.join(map(card, containers))}</div>"""
