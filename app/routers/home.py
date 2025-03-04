@@ -7,6 +7,7 @@ from app.utils import minify_html
 from app.models import ShortcutApp, CategoryApp
 from app.database import SessionDep
 from app.request import ShortcutAppCreate, CategoryAppCreate
+from app.responses import ToastResponse
 
 html = str
 
@@ -32,9 +33,10 @@ async def view_root(
     return minify
 
 
-@router.post("/shortcut-app/save", response_class=HTMLResponse)
-async def post_shortcut_app(db: SessionDep, item: Annotated[ShortcutAppCreate, Form()]):
-    _tamplate = "alert.jinja"
+@router.post("/shortcut-app/save", response_model=ToastResponse)
+async def post_shortcut_app(
+    db: SessionDep, item: Annotated[ShortcutAppCreate, Form()]
+) -> ToastResponse:
     _item = ShortcutApp(**item.model_dump())
     _item.icon = _item.icon.lower()
     if _item.id:
@@ -49,9 +51,7 @@ async def post_shortcut_app(db: SessionDep, item: Annotated[ShortcutAppCreate, F
     db.add(_item)
     db.commit()
     db.refresh(_item)
-    ctx = {"message": "Success save shortcut !", "variant": "success"}
-    html_content: html = templates.get_template(_tamplate).render(ctx)
-    return HTMLResponse(content=html_content, status_code=200)
+    return ToastResponse(message=f"Success save {_item.name} shortcut !")
 
 
 @router.get("/shortcut-app/list", response_class=HTMLResponse)
@@ -102,22 +102,22 @@ async def get_list_shortcut_app_by_id(
     return HTMLResponse(content=html_content, status_code=200)
 
 
-@router.delete("/shortcut-app/{_id}", response_class=HTMLResponse)
-def delete_shortcut_app(_id: int, db: SessionDep):
-    _tamplate = "alert.jinja"
+@router.delete("/shortcut-app/{_id}", response_model=ToastResponse)
+def delete_shortcut_app(_id: int, db: SessionDep) -> ToastResponse:
     _item = db.get(ShortcutApp, _id)
     if not _item:
         raise HTTPException(status_code=404, detail="Shortcut not found")
     db.delete(_item)
     db.commit()
-    ctx = {"message": f"Success delete shortcut {_item.name} !", "variant": "danger"}
-    html_content: html = templates.get_template(_tamplate).render(ctx)
-    return HTMLResponse(content=html_content, status_code=200)
+    return ToastResponse(
+        message=f"Success delete shortcut {_item.name} !", variant="info"
+    )
 
 
-@router.post("/category-app/save", response_class=HTMLResponse)
-async def post_category_app(db: SessionDep, item: Annotated[CategoryAppCreate, Form()]):
-    _tamplate = "alert.jinja"
+@router.post("/category-app/save", response_model=ToastResponse)
+async def post_category_app(
+    db: SessionDep, item: Annotated[CategoryAppCreate, Form()]
+) -> ToastResponse:
     _item = CategoryApp(**item.model_dump())
     _item.icon = _item.icon.lower()
 
@@ -140,9 +140,7 @@ async def post_category_app(db: SessionDep, item: Annotated[CategoryAppCreate, F
     db.add(_item)
     db.commit()
     db.refresh(_item)
-    ctx = {"message": "Success save category !", "variant": "success"}
-    html_content: html = templates.get_template(_tamplate).render(ctx)
-    return HTMLResponse(content=html_content, status_code=200)
+    return ToastResponse(message=f"Success save {_item.name} category !")
 
 
 @router.get("/category-app/list", response_class=HTMLResponse)
@@ -192,10 +190,8 @@ async def get_options_category_app(
     return HTMLResponse(content=html_content, status_code=200)
 
 
-@router.delete("/category-app/{_id}", response_class=HTMLResponse)
-def delete_category_app(_id: int, db: SessionDep):
-    _tamplate = "alert.jinja"
-
+@router.delete("/category-app/{_id}", response_model=ToastResponse)
+def delete_category_app(_id: int, db: SessionDep) -> ToastResponse:
     _apps = db.exec(select(ShortcutApp).where(ShortcutApp.category_app_id == _id)).all()
 
     if len(_apps):
@@ -207,9 +203,9 @@ def delete_category_app(_id: int, db: SessionDep):
 
     db.delete(_item)
     db.commit()
-    ctx = {"message": f"Success delete category {_item.name} !", "variant": "danger"}
-    html_content: html = templates.get_template(_tamplate).render(ctx)
-    return HTMLResponse(content=html_content, status_code=200)
+    return ToastResponse(
+        message=f"Success delete category {_item.name} !", variant="info"
+    )
 
 
 @router.get("/category-app/order/options", response_class=HTMLResponse)

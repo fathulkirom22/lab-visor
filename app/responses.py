@@ -16,6 +16,11 @@ class ErrorResponse(BaseResponse):
     data: None = None
 
 
+class ToastResponse(BaseResponse):
+    toast: bool = True
+    variant: str = "success"
+
+
 class PaginatedResponse(BaseResponse):
     page: int
     size: int

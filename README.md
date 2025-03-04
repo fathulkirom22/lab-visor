@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./docs/lab-visor.png" />
+    <img width="80%" src="./docs/lab-visor.png" />
 </p>
 
 ## Home Lab Landingpage & Resource Monitoring

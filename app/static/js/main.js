@@ -1,3 +1,4 @@
+// dark or light theme
 const iconSwitchTheme = document.getElementById('iconSwitchTheme');
 const btnSwitchTheme = document.getElementById('btnSwitchTheme');
 
@@ -26,10 +27,27 @@ btnSwitchTheme.addEventListener('click', () => {
     }
 });
 
+// htmx error handling
 document.body.addEventListener('htmx:error', function(event) {
     let toastBody = document.querySelector("#error-toast .toast-body");
     toastBody.textContent = `${JSON.parse(event.detail.errorInfo.xhr.response).detail}`;
 
     let toast = new bootstrap.Toast(document.getElementById("error-toast"));
     toast.show();
+});
+
+// htmx success handling
+document.body.addEventListener('htmx:afterRequest', function(event) {
+    try {
+        let data = JSON.parse(event.detail.xhr.response);
+        let toastBody = document.querySelector("#success-toast .toast-body");
+        if (data.toast) {
+            toastBody.textContent = `${data.message}`;
+    
+            let toast = new bootstrap.Toast(document.getElementById("success-toast"));
+            toast.show();
+        }
+    } catch (warn) {
+        console.warn("Not trigger toast:", warn)
+    }
 });

@@ -21,7 +21,7 @@
                         id="form-shortcut-app"
                         hx-post="/shortcut-app/save"
                         hx-target="#_alert" 
-                        hx-swap="afterbegin"
+                        hx-swap="innerHTML"
                         hx-on::after-request="
                             if(event.detail.successful){
                                 const isEdit = {{edit | tojson}};
@@ -133,7 +133,7 @@
                         id="form-shortcut-app"
                         hx-post="/category-app/save"
                         hx-target="#_alert" 
-                        hx-swap="afterbegin"
+                        hx-swap="innerHTML"
                         hx-on::after-request="
                             if(event.detail.successful){
                                 if(!{{edit | tojson}}) {
@@ -141,6 +141,9 @@
                                 }
                                 let modalEL = document.getElementById('formCategoryApp-{{item.id}}');
                                 let modal = bootstrap.Modal.getInstance(modalEL);
+                                if (!modal) {
+                                    return
+                                }
                                 modal.hide();
                                 htmx.trigger('#homeListCategoryApp', 'refresh'); 
                             }
