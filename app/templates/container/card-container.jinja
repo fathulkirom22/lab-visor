@@ -1,0 +1,25 @@
+{% set theme = 'secondary' %}
+{% set running_theme = 'success' if item.status == 'running' else 'danger' %}
+{% set health_theme = 'success' if item.health == 'healthy' else 'warning' %}
+
+<div class="col-sm-3 p-2">
+    <div class="countainer-card card border-{{theme}} text-{{theme}} color-{{theme}} h-100">
+        <i class="countainer-bg bi bi-{{item.icon}}"></i>
+        <div class="card-body h-100">
+            <div class="d-flex column flex-column justify-content-between h-100">
+                <div class="d-flex justify-content-between">
+                    <div class="mb-4">
+                        <h5 class="card-title">{{item.name}}</h5>
+                        <p class="card-text text-muted">ID: {{item.short_id}}</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-circle-fill text-{{running_theme}}"></i>
+                    </div>
+                </div>
+                <div>
+                    <i class="bi bi-activity text-{{health_theme}}"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

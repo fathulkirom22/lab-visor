@@ -1,0 +1,62 @@
+from typing import Annotated
+from fastapi import APIRouter, Request, Query
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+from app.utils import minify_html
+import docker
+from fastapi import HTTPException
+
+html = str
+
+router = APIRouter(prefix="/container", tags=["container"], include_in_schema=False)
+
+templates = Jinja2Templates(directory="app/templates")
+templates.env.trim_blocks = True
+templates.env.lstrip_blocks = True
+
+
+def get_docker_client():
+    try:
+        client = docker.from_env()
+        client.ping()
+        return client
+    except Exception:
+        raise HTTPException(status_code=503, detail="Docker service unavailable")
+
+
+@router.get("/")
+async def view_root_container(
+    request: Request,
+) -> HTMLResponse:
+    _tamplate = "container/index.jinja"
+
+    res = templates.TemplateResponse(
+        _tamplate,
+        {"request": request, "title": "Container"},
+    )
+    minify = await minify_html(res)
+    return minify
+
+
+@router.get("/list")
+async def get_list_container(
+    request: Request,
+) -> HTMLResponse:
+    def card(item):
+        _tamplate = "container/card-container.jinja"
+        res = templates.get_template(_tamplate).render(
+            {"request": request, "item": item}
+        )
+        return res
+
+    client = get_docker_client()
+    containers = client.containers.list(all=True)
+
+    if len(containers) <= 0:
+        html_content: html = (
+            """<h1 class="text-center"><i class="bi bi-exclamation-diamond"></i></h1>"""
+        )
+        return HTMLResponse(content=html_content, status_code=200)
+
+    html_content: html = f"""<div class="row">{''.join(map(card, containers))}</div>"""
+    return HTMLResponse(content=html_content, status_code=200)

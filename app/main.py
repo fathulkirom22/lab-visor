@@ -2,8 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
-from .routers import home
-from .routers import sys
+from .routers import home, sys, container
 from .routers.api import api_router
 from .startup import lifespan
 
@@ -33,6 +32,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.include_router(api_router)
 app.include_router(home.router)
 app.include_router(sys.router)
+app.include_router(container.router)
 
 
 @app.exception_handler(404)
