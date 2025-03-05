@@ -9,14 +9,14 @@
         </button>
     {% endif %}
 
-    <div class="modal fade text-secondary" id="formShortcutApp-{{category_app_id}}-{{item.id}}" tabindex="-1" aria-labelledby="formShortcutAppLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade text-secondary" id="formShortcutApp-{{category_app_id}}-{{item.id}}" tabindex="-1" aria-labelledby="formShortcutAppLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="formShortcutAppLabel">App</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h3 class="modal-title fs-5" id="formShortcutAppLabel">App</h3>
+                        <button type="button" class="btn btn-sm" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                    </div>
                     <form
                         id="form-shortcut-app"
                         hx-post="/shortcut-app/save"
@@ -69,7 +69,7 @@
                                 <option>Loading...</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="description-text" class="col-form-label">Description</label>
                             <textarea class="form-control" id="description-text" name="description" placeholder="input description">{{item.description}}</textarea>
                         </div>
@@ -115,20 +115,20 @@
                 <i class="bi bi-pencil"></i>
             </button>
         {% else %}
-            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#formCategoryApp-{{item.id}}" data-bs-whatever="@getbootstrap">
+            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#formCategoryApp-{{item.id}}" data-bs-whatever="@getbootstrap">
                 <span class="bi bi-plus"></span> Add Category
             </button>
         {% endif %}
     {% endif %}
 
-    <div class="modal fade text-secondary" id="formCategoryApp-{{item.id}}" tabindex="-1" aria-labelledby="formCategoryAppLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade text-secondary" id="formCategoryApp-{{item.id}}" tabindex="-1" aria-labelledby="formCategoryAppLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="formCategoryAppLabel">Category</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h3 class="modal-title fs-5" id="formCategoryAppLabel">Category</h3>
+                        <button type="button" class="btn btn-sm" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                    </div>
                     <form
                         id="form-shortcut-app"
                         hx-post="/category-app/save"
@@ -175,7 +175,7 @@
                                 <option>Loading...</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="order-category" class="col-form-label">Order</label>
                             <select 
                                 id="order-category-{{item.id}}" 
