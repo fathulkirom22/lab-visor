@@ -69,6 +69,21 @@
                                 <option>Loading...</option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="category-app" class="col-form-label">Link to container</label>
+                            <select 
+                                id="container-name-{{category_app_id}}-{{item.id}}" 
+                                hx-get="/container/list/options?default={{item.container_name}}"
+                                hx-trigger="load"
+                                hx-target="#container-name-{{category_app_id}}-{{item.id}}" 
+                                hx-swap="innerHTML"
+                                class="form-select"
+                                name="container_name"
+                                hx-on::after-request="false"
+                            >
+                                <option>Loading...</option>
+                            </select>
+                        </div>
                         <div class="mb-4">
                             <label for="description-text" class="col-form-label">Description</label>
                             <textarea class="form-control" id="description-text" name="description" placeholder="input description">{{item.description}}</textarea>

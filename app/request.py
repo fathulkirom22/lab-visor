@@ -14,6 +14,7 @@ class ShortcutAppCreate(BaseModel):
     icon: Annotated[Optional[str], Field(...)] = None
     description: Annotated[Optional[str], Field(...)] = None
     category_app_id: Annotated[Optional[int], Field(...)] = None
+    container_name: Annotated[Optional[str], Field(...)] = None
 
     @field_validator("link")
     @classmethod

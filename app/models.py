@@ -1,9 +1,10 @@
 """module for model on db"""
 
-from typing import Optional
+from typing import Optional, Any
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship
 from pydantic import HttpUrl
+from docker.models.containers import ContainerCollection
 
 
 class BaseModel(SQLModel):
@@ -45,6 +46,7 @@ class ShortcutApp(BaseModel, table=True):
     description: Optional[str] = Field(default=None)
     category_app_id: Optional[int] = Field(default=None, foreign_key="category_app.id")
     category_app: Optional[CategoryApp] = Relationship(back_populates="apps")
+    container_name: Optional[str] = Field(default=None)
 
     @classmethod
     def validate(cls, value):

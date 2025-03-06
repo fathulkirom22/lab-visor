@@ -9,8 +9,10 @@ from app.models import ShortcutApp, CategoryApp
 from app.database import SessionDep
 from app.request import ShortcutAppCreate, CategoryAppCreate
 from app.responses import ToastResponse
+from app.utils import get_docker_client
 
 html = str
+docker_client = get_docker_client(safe=True)
 
 router = APIRouter(tags=["home"], include_in_schema=False)
 
@@ -41,6 +43,7 @@ def validation_post_shortcut_app(
     icon: Annotated[Optional[str], Form(...)] = None,
     description: Annotated[Optional[str], Form(...)] = None,
     category_app_id: Annotated[Optional[int], Form(...)] = None,
+    container_name: Annotated[Optional[str], Form(...)] = None,
 ) -> ShortcutAppCreate:
     try:
         res = ShortcutAppCreate(
@@ -50,6 +53,7 @@ def validation_post_shortcut_app(
             icon=icon,
             description=description,
             category_app_id=category_app_id,
+            container_name=container_name,
         )
     except ValidationError as e:
         error = e.errors()[0]
@@ -83,9 +87,17 @@ async def post_shortcut_app(
 
 @router.get("/shortcut-app/list", response_class=HTMLResponse)
 async def get_list_shortcut_app(db: SessionDep):
+
     def card(item: ShortcutApp):
         _tamplate = "home/card-shortcut-app.jinja"
-        res = templates.get_template(_tamplate).render({"item": item})
+
+        container = None
+        if item.container_name and docker_client:
+            container = docker_client.containers.get(item.container_name)
+
+        res = templates.get_template(_tamplate).render(
+            {"item": item, "container": container}
+        )
         return res
 
     data = db.exec(
@@ -108,10 +120,16 @@ async def get_list_shortcut_app_by_id(
     _id_category: int,
     page_edit: Annotated[int, Query(ge=0, le=1)] = 0,
 ):
+
     def card(item: ShortcutApp):
         _tamplate = "home/card-shortcut-app.jinja"
+
+        container = None
+        if item.container_name and docker_client:
+            container = docker_client.containers.get(item.container_name)
+
         res = templates.get_template(_tamplate).render(
-            {"item": item, "page_edit": page_edit}
+            {"item": item, "page_edit": page_edit, "container": container}
         )
         return res
 
@@ -293,4 +311,27 @@ async def get_theme_options_category_app(default: Annotated[str, Query()] = ""):
         return html_content
 
     html_content: html = "".join(map(card, THEMES))
+    return HTMLResponse(content=html_content, status_code=200)
+
+
+@router.get("/container/list/options", response_class=HTMLResponse)
+async def get_options_container(default: Annotated[str, Query()] = ""):
+    def card(item: CategoryApp):
+        name_default = None if not default else default
+        selected = "selected" if item.name == name_default else ""
+        html_content: html = (
+            f"""<option value="{item.name}" {selected}>{item.name}</option>"""
+        )
+        return html_content
+
+    data = []
+    if docker_client:
+        data = docker_client.containers.list(all=True)
+
+    html_content: html = (
+        "<option value=''>Select container...</option>"  # More descriptive default option
+        + "".join(
+            map(card, sorted(data, key=lambda x: x.name))
+        )  # Sort containers by name
+    )
     return HTMLResponse(content=html_content, status_code=200)

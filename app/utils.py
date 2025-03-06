@@ -1,6 +1,8 @@
 import os
 import re
 import htmlmin
+import docker
+from fastapi import HTTPException
 from fastapi.responses import HTMLResponse
 
 
@@ -85,3 +87,15 @@ def convert_bytes_without_unit(bytes):
         bytes /= factor
         index += 1
     return bytes
+
+
+def get_docker_client(safe: bool = False):
+    try:
+        client = docker.from_env()
+        client.ping()
+        return client
+    except Exception:
+        if safe:
+            return None
+        else:
+            raise HTTPException(status_code=503, detail="Docker service unavailable")

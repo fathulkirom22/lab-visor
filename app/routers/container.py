@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 from app.utils import minify_html
 import docker
 from fastapi import HTTPException
+from app.utils import get_docker_client
 
 html = str
 
@@ -13,15 +14,6 @@ router = APIRouter(prefix="/container", tags=["container"], include_in_schema=Fa
 templates = Jinja2Templates(directory="app/templates")
 templates.env.trim_blocks = True
 templates.env.lstrip_blocks = True
-
-
-def get_docker_client():
-    try:
-        client = docker.from_env()
-        client.ping()
-        return client
-    except Exception:
-        raise HTTPException(status_code=503, detail="Docker service unavailable")
 
 
 @router.get("/")
