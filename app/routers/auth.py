@@ -1,11 +1,11 @@
 from typing import Annotated
 
+import jwt
+from jwt.exceptions import InvalidTokenError
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
-from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
-import jwt
 from datetime import timedelta, datetime, timezone
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -23,11 +23,9 @@ fake_users_db = {
 }
 
 
-def fake_hash_password(password: str):
-    return "fakehashed" + password
-
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 router = APIRouter(
     prefix="/auth",
@@ -56,15 +54,8 @@ class UserInDB(User):
     hashed_password: str
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
 
 
 def get_user(db, username: str):
@@ -91,11 +82,6 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
-
-def fake_decode_token(token):
-    user = get_user(fake_users_db, token)
-    return user
 
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
