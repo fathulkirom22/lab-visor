@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
-from .routers import home, sys, container
+from .routers import home, sys, container, auth
 from .routers.api import api_router
 from .startup import lifespan
 
@@ -29,10 +29,11 @@ app.add_middleware(
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-app.include_router(api_router)
+app.include_router(auth.router)
 app.include_router(home.router)
 app.include_router(sys.router)
 app.include_router(container.router)
+app.include_router(api_router)
 
 
 @app.exception_handler(404)
