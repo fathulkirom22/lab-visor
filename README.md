@@ -1,5 +1,5 @@
 <p align="center">
-    <img width="80%" src="./docs/lab-visor_2.png" />
+    <img width="80%" src="./docs/lab-visor.png" />
 </p>
 
 # Lab Visor
