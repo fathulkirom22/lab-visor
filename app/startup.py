@@ -28,7 +28,7 @@ def track_resource_usage():
         session.refresh(data)
 
         # Delete old data
-        table_name = "sysdatatracker"
+        table_name = "sys_data_tracker"
         timestamp_column = "created_at"
         limit = 1000
         row = session.exec(select(func.count()).select_from(SysDataTracker)).one()
