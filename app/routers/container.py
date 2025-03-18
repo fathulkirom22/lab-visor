@@ -30,6 +30,41 @@ async def view_root_container(
     return minify
 
 
+@router.get("/{_container_id}/log")
+async def view_root_container_log(
+    request: Request,
+    _container_id: str,
+) -> HTMLResponse:
+    _tamplate = "container-log/index.jinja"
+
+    res = templates.TemplateResponse(
+        _tamplate,
+        {
+            "request": request,
+            "title": f"Container - {_container_id}",
+            "_container_id": _container_id,
+        },
+    )
+    minify = await minify_html(res)
+    return minify
+
+
+@router.get("/{_container_id}/get-log")
+async def get_container_log(
+    _container_id: str,
+) -> HTMLResponse:
+    client = get_docker_client()
+    container = client.containers.get(_container_id)
+
+    if not container:
+        _tamplate = "empty.jinja"
+        html_content = templates.get_template(_tamplate).render()
+        return HTMLResponse(content=html_content, status_code=200)
+
+    html_content: str = container.logs()
+    return HTMLResponse(content=html_content, status_code=200)
+
+
 @router.get("/list")
 async def get_list_container(
     request: Request,

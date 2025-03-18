@@ -27,6 +27,13 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-end">
                     <a href="{{item.link}}" target="_blank" class="btn btn-{{item.category_app.theme}}">Launch App</a>
+                    {% if container %}
+                        <div>
+                            <a class="text-secondary" href="/container/{{container.short_id}}/log">
+                                <i class="bi bi-file-earmark-text" title="Log"></i>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -16,8 +16,15 @@
                         <i class="bi bi-circle-fill text-{{running_theme}}" title="{{item.status}}"></i>
                     </div>
                 </div>
-                <div>
-                    <i class="bi bi-activity text-{{health_theme}}" title="{{item.health}}"></i>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <i class="bi bi-activity text-{{health_theme}}" title="{{item.health}}"></i>
+                    </div>
+                    <div>
+                        <a href="/container/{{item.short_id}}/log">
+                            <i class="bi bi-file-earmark-text" title="Log"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

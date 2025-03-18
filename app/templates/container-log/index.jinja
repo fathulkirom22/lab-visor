@@ -1,0 +1,18 @@
+
+{% extends "base.jinja" %}
+{% import "home/modal.jinja" as modal %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card bg-body-tertiary">
+            <div class="card-header">
+                <h5 class="card-title">Container Logs</h5>
+            </div>
+            <div class="card-body">
+                <pre style="max-height: 70vh" hx-get="/container/{{_container_id}}/get-log" hx-trigger="load, every 5s"></pre>
+            </div>
+        </div>
+    </div>
+{% endblock %}
